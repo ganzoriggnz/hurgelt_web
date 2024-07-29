@@ -2,9 +2,7 @@ import dbConnect from "@/lib/dbConnect";
 import { sendNotificationfirebase } from "@/lib/firebase_func";
 import CustomerModel from "@/models/customers.model";
 import OrderModel from "@/models/orders.model";
-import OrderProductsModel from "@/models/orders_products.model";
 import UserModel from "@/models/users.model";
-import { IOrderProducts } from "@/types/next";
 import jwt from "jsonwebtoken";
 import { NextApiRequest, NextApiResponse } from "next";
 import NextCors from "nextjs-cors";
@@ -51,30 +49,6 @@ export default async function handler(
         other: body?.other,
       });
 
-      const order_productsList: IOrderProducts[] = body?.order_products?.map(
-        (item: any) => {
-          const prod = item?.product ? JSON.parse(item?.product) : {};
-          return {
-            order_number: body?.order_number,
-            customer: body?.customer?._id,
-            product: prod?._id,
-            product_code: prod?.code,
-            product_name: prod?.name,
-            delivery_price: prod?.delivery_price,
-            sale_price: prod?.price,
-            too: item?.too ? Number.parseInt(item?.too) : 0,
-          };
-        }
-      );
-      await OrderProductsModel.deleteMany({ order_number: body?.order_number });
-      let listTemp = [];
-      for (let index = 0; index < order_productsList.length; index++) {
-        const element: IOrderProducts = order_productsList[index];
-        element.jolooch = body?.jolooch_user;
-        element.jolooch_username = body?.jolooch_username;
-        const idIP = await OrderProductsModel.create(element);
-        listTemp.push(idIP);
-      }
       let status = body?.status;
       if (body?.jolooch_user) {
         status = "Хүргэлтэнд";
@@ -91,7 +65,6 @@ export default async function handler(
         {
           owner: body?.owner,
           owner_name: body?.owner_name,
-          order_products: listTemp,
           order_product: body?.order_product,
           total_price: body?.total_price,
           total_sale_price: body?.total_sale_price,
@@ -122,7 +95,7 @@ export default async function handler(
         title: `№${body?.order_number}-Захиалгын мэдээлэл шинэчлэгдлээ.`,
         body: `Захиалагчын утас: ${
           order?.customer_phone
-        }, Бараа: ${order_productsList
+        }, Бараа: ${body.order_product
           .map((item: any) => {
             return `(${item.product_name}-${item.too}ш)`;
           })

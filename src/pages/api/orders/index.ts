@@ -1,8 +1,6 @@
 import dbConnect, { rgx } from "@/lib/dbConnect";
 import CustomerModel from "@/models/customers.model";
-import DeliveryZoneModel from "@/models/deliveryzones.model";
 import OrderModel from "@/models/orders.model";
-import OrderProductsModel from "@/models/orders_products.model";
 import ProductModel from "@/models/products.model";
 import UserModel from "@/models/users.model";
 import jwt from "jsonwebtoken";
@@ -113,33 +111,9 @@ export default async function handler(
     const data = await OrderModel.find(where)
       .populate([
         {
-          path: "order_products",
-          model: OrderProductsModel,
-          populate: {
-            path: "product",
-            model: ProductModel,
-          },
-        },
-        {
           path: "owner",
           model: UserModel,
           select: { password: 0 },
-        },
-        {
-          path: "deliveryzone",
-          model: DeliveryZoneModel,
-          select: { _id: 1, zone: 1, user: 1, duureg: 1 },
-          populate: {
-            path: "user",
-            model: UserModel,
-            select: {
-              _id: 1,
-              username: 1,
-              name: 1,
-              phone: 1,
-              phone2: 1,
-            },
-          },
         },
         {
           path: "from_user",

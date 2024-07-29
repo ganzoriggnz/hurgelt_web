@@ -13,11 +13,11 @@ import { useEffect, useState } from "react";
 import SelectProductWidget from "../select_product";
 
 import axiosInstance from "@/lib/axios";
-import { IOrder, IOrderProducts } from "@/types/next";
+import { IOrder } from "@/types/next";
 import dayjs from "dayjs";
 import Image from "next/image";
 import { toast } from "react-toastify";
-import SelectZoneJoloochWidget from "../select_ZoneJolooch";
+import SelectJoloochWidget from "../select_jolooch";
 let index = 0;
 
 const EditOrderModal = ({
@@ -43,7 +43,7 @@ const EditOrderModal = ({
   const duureg = Form.useWatch("duureg", registerform);
   const dateFormat = "YYYY/MM/DD";
 
-  const [zoneJoloochList, setZoneJolooch] = useState<any[]>([]);
+  const [joloochList, setZoneJolooch] = useState<any[]>([]);
 
   useEffect(() => {
     const templist = sessionStorage.getItem("deliveryzoneJoloochList");
@@ -215,16 +215,14 @@ const EditOrderModal = ({
         is_paid: data?.isPaid,
         payment_type: data?.payment_type,
         status: data?.status,
-        jolooch: zoneJoloochList.findLast((a) =>
-          a?.value?.includes(data?.deliveryzone?._id)
+        jolooch: joloochList.findLast((a) =>
+          a?.value?.includes(data?.jolooch?._id)
         )
-          ? zoneJoloochList.findLast((a) =>
-              a?.value?.includes(data?.deliveryzone?._id)
-            )
-          : JSON.stringify(data?.deliveryzone),
+          ? joloochList.findLast((a) => a?.value?.includes(data?.jolooch?._id))
+          : JSON.stringify(data?.jolooch),
         duureg: data?.duureg,
-        order_products: data?.order_products
-          ? data?.order_products.map((item: IOrderProducts) => {
+        order_product: data?.order_product
+          ? data?.order_product.map((item: any) => {
               return {
                 too: item?.too,
                 product: JSON.stringify(item?.product),
@@ -382,7 +380,7 @@ const EditOrderModal = ({
                   ]}
                 />
               </Form.Item>
-              <SelectZoneJoloochWidget
+              <SelectJoloochWidget
                 duureg={duureg}
                 className="mb-1"
                 name={"jolooch"}

@@ -1,6 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
 import InvoiceModel from "@/models/invoices.model";
-import InvoiceProductsModel from "@/models/invoices_products.model";
 import UserModel from "@/models/users.model";
 import dayjs from "dayjs";
 import mongoose from "mongoose";
@@ -48,10 +47,6 @@ export default async function handler(
     const totalcnt = (await InvoiceModel.countDocuments(where)) ?? 0;
     const data = await InvoiceModel.find(where)
       .populate([
-        {
-          path: "invoice_products",
-          model: InvoiceProductsModel,
-        },
         {
           path: "owner",
           model: UserModel,

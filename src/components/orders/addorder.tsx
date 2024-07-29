@@ -8,8 +8,8 @@ import { useEffect, useRef, useState } from "react";
 import type { DraggableData, DraggableEvent } from "react-draggable";
 import Draggable from "react-draggable";
 import { toast } from "react-toastify";
-import SelectZoneJoloochWidget from "../select_ZoneJolooch";
 import SelectCustomerWidget from "../select_customer";
+import SelectJoloochWidget from "../select_jolooch";
 import SelectProductWidget from "../select_product";
 
 const AddOrderModal = ({ handleCancel, handleOk, getDataReset, open }: any) => {
@@ -124,7 +124,6 @@ const AddOrderModal = ({ handleCancel, handleOk, getDataReset, open }: any) => {
             nemelt: values?.nemelt,
             payment_type: values?.payment_type,
             isPaid: values?.is_paid,
-            order_products: order_products,
             order_product: order_products?.map((items: any) => {
               const prod = items?.product ? JSON.parse(items?.product) : {};
               return {
@@ -149,9 +148,6 @@ const AddOrderModal = ({ handleCancel, handleOk, getDataReset, open }: any) => {
               0
             ),
             too: order_products?.reduce((a: number, b: any) => a + b?.too, 0),
-            deliveryzone: values?.jolooch
-              ? JSON.parse(values?.jolooch)?._id
-              : null,
             jolooch_user: values?.jolooch
               ? JSON.parse(values?.jolooch)?.user?._id
               : null,
@@ -365,8 +361,7 @@ const AddOrderModal = ({ handleCancel, handleOk, getDataReset, open }: any) => {
                 />
               </Form.Item>
 
-              <SelectZoneJoloochWidget
-                duureg={duureg}
+              <SelectJoloochWidget
                 name={"jolooch"}
                 className="mb-3"
                 label="Хүргэлт жолооч"

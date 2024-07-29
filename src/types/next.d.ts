@@ -45,6 +45,12 @@ export interface IUser {
   logout_at?: Date;
   isActive: boolean;
   isOperator: boolean;
+
+  zone?: string;
+  duureg?: string;
+  car_number?: string;
+  car_mark?: string;
+  car_desc?: string;
 }
 export interface IProduct {
   id?: string;
@@ -59,19 +65,6 @@ export interface IProduct {
   balance?: number;
   isActive?: boolean;
   category?: string;
-  created_at?: Date;
-  updated_at?: Date;
-}
-
-export interface IDeliveryZone {
-  id?: string;
-  _id?: string;
-  user: IUser;
-  zone?: string;
-  duureg?: string;
-  car_number?: string;
-  car_mark?: string;
-  car_desc?: string;
   created_at?: Date;
   updated_at?: Date;
 }
@@ -93,7 +86,6 @@ export interface ICustomer {
   _id?: string;
   phone: string;
   address?: string;
-  duureg?: string;
   created_at?: Date;
   updated_at?: Date;
 }
@@ -104,10 +96,9 @@ export interface IInvoice {
   owner: IUser;
   owner_name?: string;
   type?: string;
-  invoice_products?: IInvoiceProducts[];
   invoice_product?: [
     {
-      product: IProduct;
+      product?: IProduct;
       product_code: string;
       product_name: string;
       price: number;
@@ -128,22 +119,6 @@ export interface IInvoice {
   payment_date?: Date;
   isCompleted?: boolean;
 
-  created_at?: Date;
-  updated_at?: Date;
-}
-export interface IInvoiceProducts {
-  id?: string;
-  _id?: string;
-  invoice_number: string;
-  owner: IUser;
-  type?: string;
-  product?: IProduct;
-  product_code?: string;
-  product_name?: string;
-  price: number;
-  sale_price: number;
-  too: number;
-  isDeleted?: Date;
   created_at?: Date;
   updated_at?: Date;
 }
@@ -174,8 +149,14 @@ export interface IOrder {
   owner: IUser;
   owner_name?: string;
   type?: string;
-  order_products?: IOrderProducts[];
-  order_product?: IOrderProducts[];
+  order_product?: {
+    product?: IProduct;
+    product_code: string;
+    product_name: string;
+    delivery_price: number;
+    sale_price: number;
+    too: number;
+  }[];
   total_price?: number;
   total_sale_price?: number;
   delivery_total_price?: number;
@@ -185,7 +166,6 @@ export interface IOrder {
   from_username?: string;
 
   jolooch: IUser;
-  deliveryzone: IDeliveryZone;
   jolooch_username: string;
 
   customer?: ICustomer;
@@ -214,22 +194,4 @@ export interface IOrder {
   created_at?: Date;
   updated_at?: Date;
   list_rank?: number;
-}
-
-export interface IOrderProducts {
-  id?: string;
-  _id?: string;
-  order_number: string;
-  customer: ICustomer;
-  product?: IProduct;
-  product_code?: string;
-  jolooch_username?: string;
-  jolooch?: IUser;
-  product_name?: string;
-  delivery_price?: number;
-  sale_price?: number;
-  too?: number;
-  isDeleted?: Date;
-  created_at?: Date;
-  updated_at?: Date;
 }

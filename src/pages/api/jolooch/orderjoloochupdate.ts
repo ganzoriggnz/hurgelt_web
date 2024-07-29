@@ -1,6 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
 import OrderModel from "@/models/orders.model";
-import OrderProductsModel from "@/models/orders_products.model";
 import dayjs from "dayjs";
 import { NextApiRequest, NextApiResponse } from "next";
 import NextCors from "nextjs-cors";
@@ -33,66 +32,17 @@ export default async function handler(
       };
       await dbConnect();
 
-      var newtotal_sale_price = 0;
-      var newdelivery_total_price = 0;
-      var newtoo = 0;
-      let listTemp = [];
-      var jolooch = "";
-      var jolooch_username = "";
-
-      if (oldList && oldList?.length > 0) {
-        for (let index = 0; index < oldList.length; index++) {
-          if (oldList[index]) {
-            const ele = oldList[index];
-            jolooch = ele?.jolooch;
-            jolooch_username = ele?.jolooch_username;
-            if (ele?.too > 0) {
-              newtoo += ele?.too;
-              newtotal_sale_price += (ele?.sale_price ?? 0) * ele?.too;
-              newdelivery_total_price += (ele?.delivery_price ?? 0) * ele?.too;
-            }
-            const newsd = await OrderProductsModel.findByIdAndUpdate(
-              ele?.id,
-              {
-                too: ele?.too,
-                sale_price: ele?.sale_price ?? 0,
-                delivery_price: ele?.delivery_price ?? 0,
-              },
-              { new: true }
-            );
-            listTemp.push(newsd);
-          }
-        }
-      }
-      if (newList && newList?.length > 0) {
-        for (let index = 0; index < newList.length; index++) {
-          if (newList[index]) {
-            const ele = newList[index];
-            if (ele?.too > 0) {
-              newtoo += ele?.too;
-              newtotal_sale_price += (ele?.sale_price ?? 0) * ele?.too;
-              newdelivery_total_price += (ele?.delivery_price ?? 0) * ele?.too;
-            }
-            const kkkee = await OrderProductsModel.create({
-              order_number: ele?.order_number,
-              customer: ele?.customer,
-              product: ele?.product?.id,
-              product_code: ele?.product_code,
-              jolooch_username,
-              jolooch,
-              product_name: ele?.product_name,
-              delivery_price: ele?.delivery_price ?? 0,
-              sale_price: ele?.sale_price ?? 0,
-              too: ele?.too,
-            });
-            listTemp.push(kkkee);
-          }
-        }
-      }
-
-      body.too = newtoo;
+      var newtotal_sale_price = body.order_product.reduce(
+        (a: number, b: any) => a + b.sale_price,
+        0
+      );
+      var newdelivery_total_price = body.order_product.reduce(
+        (a: number, b: any) => a + b.delivery_price,
+        0
+      );
+      body.too = body.order_product.reduce((a: number, b: any) => a + b.too, 0);
       body.total_price = newtotal_sale_price + newdelivery_total_price;
-      if (listTemp.length > 0) body.order_products = listTemp;
+      body.order_product = body.order_product;
       body.total_sale_price = newtotal_sale_price;
       body.delivery_total_price = newdelivery_total_price;
 

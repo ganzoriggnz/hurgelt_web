@@ -12,10 +12,6 @@ const userSchema = new Schema<ICustomer>(
       type: String,
       default: "",
     },
-    duureg: {
-      type: String,
-      default: "",
-    }
   },
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );

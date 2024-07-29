@@ -1,7 +1,6 @@
 import dbConnect from "@/lib/dbConnect";
 import { sendNotificationfirebase } from "@/lib/firebase_func";
 import OrderModel from "@/models/orders.model";
-import OrderProductsModel from "@/models/orders_products.model";
 import UserModel from "@/models/users.model";
 import UserBalancesModel from "@/models/usersbalance.model";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -27,10 +26,6 @@ export default async function handler(
     await dbConnect();
     if (id) {
       const orderData = await OrderModel.findById(id).populate([
-        {
-          path: "order_products",
-          model: OrderProductsModel,
-        },
         {
           path: "jolooch",
           model: UserModel,
@@ -74,10 +69,6 @@ export default async function handler(
         new: true,
       }).populate([
         {
-          path: "order_products",
-          model: OrderProductsModel,
-        },
-        {
           path: "jolooch",
           model: UserModel,
         },
@@ -88,7 +79,7 @@ export default async function handler(
         title: `${order.owner_name}-ажилтан  (${order?.order_number})дугаартай захиалгыг цуцлав.`,
         body: `Захиалагчын утас: ${
           order?.customer_phone
-        }, Бараа: ${order.order_products
+        }, Бараа: ${order.order_product
           .map((item: any) => {
             return `(${item.product_name}-${item.too}ш)`;
           })

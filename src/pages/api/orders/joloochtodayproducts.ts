@@ -1,6 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
 import OrderModel from "@/models/orders.model";
-import OrderProductsModel from "@/models/orders_products.model";
 import ProductModel from "@/models/products.model";
 import UserBalancesModel from "@/models/usersbalance.model";
 import dayjs from "dayjs";
@@ -45,14 +44,9 @@ export default async function handler(
     })
       .populate([
         {
-          path: "order_products",
-          model: OrderProductsModel,
-          select: { product: 1, product_code: 1, too: 1 },
-          populate: {
-            path: "product",
-            model: ProductModel,
-            select: { _id: 1, code: 1, name: 1 },
-          },
+          path: "$order_products.product",
+          model: ProductModel,
+          select: { _id: 1, code: 1, name: 1 },
         },
       ])
       .sort({ created_at: 1 });

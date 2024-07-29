@@ -13,12 +13,6 @@ const OrderSchema = new Schema<IOrder>(
     owner: { type: mongoose.Schema.Types.ObjectId, ref: "Users" },
     owner_name: { type: String, default: null },
     type: { type: String, default: null, alias: "" },
-    order_products: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "OrdersProducts",
-      },
-    ],
     order_product: [
       {
         product: {
@@ -55,11 +49,6 @@ const OrderSchema = new Schema<IOrder>(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Users",
       alias: "Жолоочийн  _id хэрэглэгчийн  ",
-    },
-    deliveryzone: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "DeliveryZones",
-      alias: "Хүргэлтийн бүс  ",
     },
     jolooch_username: {
       type: String,

@@ -461,7 +461,7 @@ const OrdersPage = () => {
       render: (rec: any, item: any) => {
         return (
           <div className="flex flex-col">
-            {item?.order_products?.map((baraa: any, index: number) => {
+            {item?.order_product?.map((baraa: any, index: number) => {
               return (
                 <div key={index}>
                   {baraa?.product_name} ({baraa?.too})

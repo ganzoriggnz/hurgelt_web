@@ -1,6 +1,6 @@
 import dbConnect from "@/lib/dbConnect";
 import OrderModel from "@/models/orders.model";
-import OrderProductsModel from "@/models/orders_products.model";
+import ProductModel from "@/models/products.model";
 import type { NextApiRequest, NextApiResponse } from "next";
 import NextCors from "nextjs-cors";
 
@@ -32,8 +32,8 @@ export default async function handler(
     })
       .populate([
         {
-          path: "order_products",
-          model: OrderProductsModel,
+          path: "product",
+          model: ProductModel,
         },
       ])
       .sort({ created_at: -1 });

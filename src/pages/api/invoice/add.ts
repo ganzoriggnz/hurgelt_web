@@ -1,9 +1,7 @@
 import dbConnect from "@/lib/dbConnect";
 import InvoiceModel from "@/models/invoices.model";
-import InvoiceProductsModel from "@/models/invoices_products.model";
 import ProductModel from "@/models/products.model";
 import UserBalancesModel from "@/models/usersbalance.model";
-import { IInvoiceProducts } from "@/types/next";
 import mongoose from "mongoose";
 import type { NextApiRequest, NextApiResponse } from "next";
 import NextCors from "nextjs-cors";
@@ -48,44 +46,17 @@ export default async function handler(
       console.log(" invoiceNumber", invoiceNumber);
       // console.log(" body::: ", body);
 
-      const invoice_productsList: IInvoiceProducts[] =
-        body?.invoice_products?.map((item: any) => {
-          const prod = item?.product ? JSON.parse(item?.product) : {};
-          const too =
-            typeof item?.too == "string"
-              ? Number.parseInt(item?.too)
-              : item?.too ?? 0;
-          return {
-            invoice_number: invoiceNumber,
-            owner: body?.owner,
-            type: body?.type,
-            product: prod?._id,
-            product_code: prod?.code,
-            product_name: prod?.name,
-            price: prod?.price,
-            sale_price: prod?.delivery_price + prod?.price,
-            too: too,
-          };
-        });
-      let listTemp = [];
-      for (let index = 0; index < invoice_productsList.length; index++) {
-        const element: IInvoiceProducts = invoice_productsList[index];
-        const idIP = await InvoiceProductsModel.create(element);
-        listTemp.push(idIP);
-      }
       const dataInvoice = await InvoiceModel.create({
         _id: newId2,
         invoice_number: invoiceNumber,
         owner: body?.owner,
         owner_name: body?.owner_name,
         type: body?.type,
-        invoice_products: listTemp,
         invoice_product: body?.invoice_product,
         total_price:
           body?.total_price ??
-          invoice_productsList?.reduce(
-            (a: number, b: IInvoiceProducts) =>
-              a + (b.sale_price ?? 0) * (b.too ?? 1),
+          body?.invoice_product?.reduce(
+            (a: number, b: any) => a + (b.sale_price ?? 0) * (b.too ?? 1),
             0
           ),
         too: body?.too,
@@ -96,8 +67,8 @@ export default async function handler(
         isPaid: body?.isPaid,
         isCompleted: body?.isCompleted,
       });
-      for (let index = 0; index < invoice_productsList.length; index++) {
-        const element: IInvoiceProducts = invoice_productsList[index];
+      for (let index = 0; index < body?.invoice_product.length; index++) {
+        const element = body?.invoice_product[index];
         const toot =
           typeof element?.too == "string"
             ? Number.parseInt(element?.too)

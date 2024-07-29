@@ -3,7 +3,6 @@ import InvoiceModel from "@/models/invoices.model";
 import UserModel from "@/models/users.model";
 import type { NextApiRequest, NextApiResponse } from "next";
 import NextCors from "nextjs-cors";
-import InvoiceProductsModel from "../../../models/invoices_products.model";
 
 export default async function handler(
   req: NextApiRequest,
@@ -24,10 +23,6 @@ export default async function handler(
 
     await dbConnect();
     const data = await InvoiceModel.findById(id).populate([
-      {
-        path: "invoice_products",
-        model: InvoiceProductsModel,
-      },
       {
         path: "owner",
         model: UserModel,

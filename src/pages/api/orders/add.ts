@@ -2,9 +2,7 @@ import dbConnect from "@/lib/dbConnect";
 import { sendNotificationfirebase } from "@/lib/firebase_func";
 import CustomerModel from "@/models/customers.model";
 import OrderModel from "@/models/orders.model";
-import OrderProductsModel from "@/models/orders_products.model";
 import UserModel from "@/models/users.model";
-import { IOrderProducts } from "@/types/next";
 import dayjs from "dayjs";
 import jwt from "jsonwebtoken";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -44,60 +42,15 @@ export default async function handler(
           message: "Байхгүй эсвэл идвэхгүй хэрэглэгч байна !!!",
         });
       }
-      // const lastorder = await OrderModel.findOne().sort({
-      //   order_number: -1,
-      // });
       let order_number = Date.now();
-
-      // if (lastorder) {
-      //   console.log(lastorder.order_number);
-      //   order_number =
-      //     dayjs(new Date()).format("YY") +
-      //     "Z" +
-      //     InvoiceNumber.next(
-      //       lastorder.order_number.substring(lastorder.order_number.length - 6)
-      //     );
-      // } else {
-      //   order_number =
-      //     dayjs(new Date()).format("YY") + "Z" + InvoiceNumber.next("A00000");
-      // }
       console.log("order_number,", order_number);
       const customerid = await CustomerModel.findOneAndUpdate(
         { phone: body?.customer_phone?.trim() },
         {
-          duureg: body?.duureg,
           address: body?.address,
         },
         { new: true, upsert: true }
       );
-      const order_productsList: IOrderProducts[] =
-        body?.order_products?.map((item: any) => {
-          let prod: any = {};
-          try {
-            prod = item?.product ? JSON.parse(item?.product) : {};
-          } catch (e) {
-            prod = item?.product;
-          }
-          return {
-            order_number: order_number,
-            customer: customerid?._id,
-            jolooch: body?.jolooch_user,
-            jolooch_username: body?.jolooch_username,
-            product: prod?._id,
-            product_code: prod?.code,
-            product_name: prod?.name,
-            delivery_price: prod?.delivery_price,
-            sale_price: prod?.price,
-            too: item?.too ? Number.parseInt(item?.too) : 0,
-          };
-        }) ?? [];
-
-      let listTemp = [];
-      for (let index = 0; index < order_productsList?.length; index++) {
-        const element: IOrderProducts = order_productsList[index];
-        const idIP = await OrderProductsModel.create(element);
-        listTemp.push(idIP);
-      }
 
       let status = "Бүртгэсэн";
       if (body?.jolooch_user) {
@@ -115,13 +68,11 @@ export default async function handler(
         order_number: order_number,
         owner: body?.owner,
         owner_name: body?.owner_name,
-        order_products: listTemp,
         order_product: body?.order_product,
         total_price: body?.total_price,
         total_sale_price: body?.total_sale_price,
         delivery_total_price: body?.delivery_total_price,
         too: body?.too,
-        deliveryzone: body?.deliveryzone,
         jolooch: body?.jolooch_user,
         jolooch_username: body?.jolooch_username,
         zone: body?.zone,
@@ -143,7 +94,7 @@ export default async function handler(
           title: `${body?.jolooch_username}-д шинэ хүргэлт ирлээ.`,
           body: `Захиалагчын утас: ${
             body?.customer_phone
-          }, Бараа: ${order_productsList
+          }, Бараа: ${body?.order_product
             .map((item: any) => {
               return `(${item.product_name}-${item.too}ш)`;
             })

@@ -1,10 +1,8 @@
 import { serializeCookie } from "@/lib";
 import dbConnect from "@/lib/dbConnect";
-import DeliveryZoneModel from "@/models/deliveryzones.model";
 import UserModel from "@/models/users.model";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import mongoose from "mongoose";
 import type { NextApiRequest, NextApiResponse } from "next";
 import NextCors from "nextjs-cors";
 
@@ -71,18 +69,6 @@ export default async function handler(
           console.log("userdata:", userdata);
           if (userdata) {
             let token: string;
-            let jolooch;
-            if (userdata?.level == 3) {
-              jolooch = await DeliveryZoneModel.findOne({
-                user: new mongoose.Types.ObjectId(userdata?._id),
-              }).populate([
-                {
-                  path: "user",
-                  model: UserModel,
-                  select: { _id: 1, username: 1, name: 1, phone: 1, phone2: 1 },
-                },
-              ]);
-            }
             userdata.password = "";
             token = jwt.sign(
               {
@@ -102,7 +88,6 @@ export default async function handler(
               result: true,
               data: token,
               user: userdata,
-              jolooch: jolooch,
             });
           }
         }
@@ -142,18 +127,6 @@ export default async function handler(
           userupdate
         );
 
-        let jolooch;
-        if (user?.level == 3) {
-          jolooch = await DeliveryZoneModel.findOne({
-            user: new mongoose.Types.ObjectId(user?._id),
-          }).populate([
-            {
-              path: "user",
-              model: UserModel,
-              select: { _id: 1, username: 1, name: 1, phone: 1, phone2: 1 },
-            },
-          ]);
-        }
         user.password = "";
         token = jwt.sign(
           {
@@ -173,7 +146,6 @@ export default async function handler(
           result: true,
           data: token,
           user,
-          jolooch: jolooch,
         });
         return;
       } else {

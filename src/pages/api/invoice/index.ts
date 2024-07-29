@@ -4,7 +4,6 @@ import UserModel from "@/models/users.model";
 import dayjs from "dayjs";
 import type { NextApiRequest, NextApiResponse } from "next";
 import NextCors from "nextjs-cors";
-import InvoiceProductsModel from "../../../models/invoices_products.model";
 
 export default async function handler(
   req: NextApiRequest,
@@ -27,6 +26,12 @@ export default async function handler(
     const searchRgx = rgx(search);
     const codeSearchRgx = rgxStart(codeSearch ?? "");
     const where: any = {
+      invoice_product: {
+        $or: [
+          { product_name: { $regex: codeSearch, $options: "i" } },
+          { product_code: { $regex: codeSearch, $options: "i" } },
+        ],
+      },
       $or: [
         { invoice_number: { $regex: searchRgx, $options: "i" } },
         { from_username: { $regex: searchRgx, $options: "i" } },
@@ -47,13 +52,6 @@ export default async function handler(
     const data = await InvoiceModel.find(where)
       .populate([
         {
-          path: "invoice_products",
-          model: InvoiceProductsModel,
-          match: {
-            product_code: { $regex: codeSearchRgx, $options: "i" },
-          },
-        },
-        {
           path: "owner",
           model: UserModel,
         },
@@ -68,14 +66,7 @@ export default async function handler(
       ])
       .limit(limit ?? 30)
       .skip(offset)
-      .sort(sort ?? { created_at: -1 })
-      .then((datas) =>
-        datas.filter(
-          (item) =>
-            item?.invoice_products != null && item?.invoice_products?.length > 0
-        )
-      );
-
+      .sort(sort ?? { created_at: -1 });
     res.status(200).json({ result: true, message: "Success", data, totalcnt });
   } catch (e) {
     console.log("getinvoice::ERROR:", e);

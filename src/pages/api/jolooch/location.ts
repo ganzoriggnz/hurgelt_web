@@ -1,5 +1,4 @@
 import dbConnect from "@/lib/dbConnect";
-import DeliveryZoneModel from "@/models/deliveryzones.model";
 import UserModel from "@/models/users.model";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
@@ -49,25 +48,11 @@ export default async function handler(
           },
           { new: true }
         );
-        let jolooch;
         if (user) user.password = "";
-        if (user?.level == 3) {
-          jolooch = await DeliveryZoneModel.findOne({
-            user: new mongoose.Types.ObjectId(user?._id),
-          }).populate([
-            {
-              path: "user",
-              model: UserModel,
-              select: { _id: 1, username: 1, name: 1, phone: 1, phone2: 1 },
-            },
-          ]);
-        }
-        console.log("jolooch:", jolooch);
         res.status(200).json({
           result: true,
           message: "Амжилттай хадгалсан.",
           user,
-          jolooch,
         });
       } else {
         res

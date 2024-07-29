@@ -24,10 +24,7 @@ export default async function handler(
     const where = {
       $or: [
         { phone: { $regex: searchRgx, $options: "i" } },
-        { name: { $regex: searchRgx, $options: "i" } },
-        { duureg: { $regex: searchRgx, $options: "i" } },
-        { horoo: { $regex: searchRgx, $options: "i" } },
-        { niitleg_bairshil: { $regex: searchRgx, $options: "i" } },
+        { address: { $regex: searchRgx, $options: "i" } },
       ],
     };
     await dbConnect();

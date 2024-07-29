@@ -1,6 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
 import InvoiceModel from "@/models/invoices.model";
-import InvoiceProductsModel from "@/models/invoices_products.model";
 import ProductModel from "@/models/products.model";
 import UserModel from "@/models/users.model";
 import UserBalancesModel from "@/models/usersbalance.model";
@@ -27,10 +26,6 @@ export default async function handler(
     await dbConnect();
     const invoice = await InvoiceModel.findById(id).populate([
       {
-        path: "invoice_products",
-        model: InvoiceProductsModel,
-      },
-      {
         path: "from_user",
         model: UserModel,
       },
@@ -53,8 +48,6 @@ export default async function handler(
         } catch (e) {
           console.log("ALDAA!!! : ", e);
         }
-
-        // if (element.type == "Орлого") {
         await UserBalancesModel.findOneAndUpdate(
           {
             owner: invoice?.to_user,
@@ -81,42 +74,10 @@ export default async function handler(
             }
           );
         }
-        // } else if (element.type == "Зарлага") {
-        //   await UserBalancesModel.findOneAndUpdate(
-        //     {
-        //       owner: invoice?.to_user,
-        //       username: invoice?.to_username,
-        //       product: element.product,
-        //     },
-        //     {
-        //       $inc: {
-        //         orlogodson: (element?.too ?? 0) * -1,
-        //       },
-        //     }
-        //   );
-
-        //   if (invoice?.from_user && invoice?.from_username) {
-        //     await UserBalancesModel.findOneAndUpdate(
-        //       {
-        //         owner: invoice?.from_user,
-        //         username: invoice?.from_username,
-        //         product: element.product,
-        //       },
-        //       {
-        //         $inc: {
-        //           zarlagadsan: (element?.too ?? 0) * -1,
-        //         },
-        //       }
-        //     );
-        //   }
-        // }
       }
     }
     const temp = await InvoiceModel.findOneAndDelete({
       _id: id ?? req.body?.id,
-    });
-    await InvoiceProductsModel.deleteMany({
-      invoice_number: temp?.invoice_number,
     });
 
     return res.status(200).json({ result: true, message: "Success" });

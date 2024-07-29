@@ -1,7 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
 import OrderModel from "@/models/orders.model";
-import OrderProductsModel from "@/models/orders_products.model";
-import dayjs from "dayjs";
 import { NextApiRequest, NextApiResponse } from "next";
 import NextCors from "nextjs-cors";
 

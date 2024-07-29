@@ -13,12 +13,6 @@ const invoiceSchema = new Schema<IInvoice>(
     owner: { type: mongoose.Schema.Types.ObjectId, ref: "Users" },
     owner_name: { type: String, default: null },
     type: { type: String, default: null, alias: "Агуулах | Борлуулалт" },
-    invoice_products: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "InvoicesProducts",
-      },
-    ],
     invoice_product: [
       {
         product: { type: mongoose.Schema.Types.ObjectId, ref: "Products" },
