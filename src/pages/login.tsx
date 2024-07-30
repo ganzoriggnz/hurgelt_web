@@ -202,7 +202,7 @@ const Login = () => {
                 height={40}
               />
             </Link>
-            <Link href="https://app.goyshop.com?shop=start" target="_blank">
+            <Link href="https://app.tulga-shop.com?shop=start" target="_blank">
               <Image
                 className="cursor-pointer"
                 src={"/assets/iphone.png"}
