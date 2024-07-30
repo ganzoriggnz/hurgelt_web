@@ -107,7 +107,6 @@ const AddInvoiceJoloochModal = ({
             owner: userContent?._id,
             owner_name: userContent?.username,
             type: values?.type,
-            invoice_products: invoice_products,
             invoice_product: invoice_products?.map((e: any) => {
               const item = JSON.parse(e?.product);
               return {

@@ -1,8 +1,6 @@
 import dbConnect from "@/lib/dbConnect";
 import CustomerModel from "@/models/customers.model";
-import DeliveryZoneModel from "@/models/deliveryzones.model";
 import OrderModel from "@/models/orders.model";
-import OrderProductsModel from "@/models/orders_products.model";
 import ProductModel from "@/models/products.model";
 import UserModel from "@/models/users.model";
 import dayjs from "dayjs";
@@ -42,26 +40,10 @@ export default async function handler(
     const data = await OrderModel.find(where)
       .populate([
         {
-          path: "order_products",
-          model: OrderProductsModel,
+          path: "order_product",
           populate: {
             path: "product",
             model: ProductModel,
-          },
-        },
-        {
-          path: "deliveryzone",
-          model: DeliveryZoneModel,
-          populate: {
-            path: "user",
-            model: UserModel,
-            select: {
-              _id: 1,
-              username: 1,
-              name: 1,
-              phone: 1,
-              phone2: 1,
-            },
           },
         },
         {

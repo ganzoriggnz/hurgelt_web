@@ -24,7 +24,6 @@ export default async function handler(
     const now = new Date();
     const data = await OrderModel.findOne({
       customer_phone: phone,
-
       created_at: {
         $gte: now.setDate(now.getDate() - 1),
         $lt: new Date(),
@@ -32,12 +31,15 @@ export default async function handler(
     })
       .populate([
         {
-          path: "product",
-          model: ProductModel,
+          path: "order_product",
+          populate: {
+            path: "product",
+            model: ProductModel,
+          },
         },
       ])
       .sort({ created_at: -1 });
-    console.log(data);
+    // console.log(data);
     if (data) res.status(200).json({ result: true, message: "Success", data });
     else res.status(200).json({ result: false, message: "Success", data });
   } catch (e) {

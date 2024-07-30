@@ -26,12 +26,12 @@ export default async function handler(
     const searchRgx = rgx(search);
     const codeSearchRgx = rgxStart(codeSearch ?? "");
     const where: any = {
-      invoice_product: {
-        $or: [
-          { product_name: { $regex: codeSearch, $options: "i" } },
-          { product_code: { $regex: codeSearch, $options: "i" } },
-        ],
-      },
+      // invoice_product: {
+      //   $or: [
+      //     { product_name: { $regex: codeSearch, $options: "i" } },
+      //     { product_code: { $regex: codeSearch, $options: "i" } },
+      //   ],
+      // },
       $or: [
         { invoice_number: { $regex: searchRgx, $options: "i" } },
         { from_username: { $regex: searchRgx, $options: "i" } },

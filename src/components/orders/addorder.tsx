@@ -104,7 +104,7 @@ const AddOrderModal = ({ handleCancel, handleOk, getDataReset, open }: any) => {
   const submitHanlde = async (values: any) => {
     if (!loading) {
       setloading(true);
-      // console.log(values);
+      console.log(values);
 
       axiosInstance
         .post("/orders/add", {
@@ -128,10 +128,10 @@ const AddOrderModal = ({ handleCancel, handleOk, getDataReset, open }: any) => {
               const prod = items?.product ? JSON.parse(items?.product) : {};
               return {
                 product: prod._id,
-                product_code: prod.product_code,
-                product_name: prod.product_name,
+                product_code: prod.code,
+                product_name: prod.name,
                 delivery_price: prod.delivery_price,
-                sale_price: prod.sale_price,
+                sale_price: prod.price,
                 too: prod.too,
               };
             }),
@@ -149,10 +149,10 @@ const AddOrderModal = ({ handleCancel, handleOk, getDataReset, open }: any) => {
             ),
             too: order_products?.reduce((a: number, b: any) => a + b?.too, 0),
             jolooch_user: values?.jolooch
-              ? JSON.parse(values?.jolooch)?.user?._id
+              ? JSON.parse(values?.jolooch)?._id
               : null,
             jolooch_username: values?.jolooch
-              ? JSON.parse(values?.jolooch)?.user?.username
+              ? JSON.parse(values?.jolooch)?.username
               : null,
             zone: values?.jolooch ? JSON.parse(values?.jolooch)?.zone : null,
             huleejawahudur: dayjs(values?.hurgelt_date, dateFormat).toDate(),
@@ -277,7 +277,7 @@ const AddOrderModal = ({ handleCancel, handleOk, getDataReset, open }: any) => {
                   target="_blank"
                 >
                   <p>24цагын захиалга харах.</p>
-                  {userTodayOrder?.order_products?.map(
+                  {userTodayOrder?.order_product?.map(
                     (itemd: any, index: number) => {
                       return (
                         <div key={index}>

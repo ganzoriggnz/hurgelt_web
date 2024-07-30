@@ -73,8 +73,6 @@ const AddUserModal = ({ handleCancel, handleOk, open, data }: any) => {
             password: values?.password?.trim(),
             role: values?.role?.split(" ")[0],
             level: values?.role?.split(" ")[1],
-          },
-          jolooch: isJolooch && {
             zone: values?.zone,
             duureg: values?.duureg,
             car_mark: values?.car_mark,

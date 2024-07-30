@@ -160,20 +160,25 @@ export default async function handler(
     } else if (username == "admin") {
       const salt = bcrypt.genSaltSync(10);
       const hash = bcrypt.hashSync(password, salt);
-      await UserModel.create({
+      const uuuu = await UserModel.create({
         username: "admin",
         password: hash,
+        phone: "80463333",
         role: "супер админ",
         level: 0,
-        phone: "80463333",
+        isActive: true,
+        email: "ganzoriggnz@gmail.com",
         name: "Adminname",
         device_token: device_token,
       });
+      console.log("uuuu====", uuuu);
       token = jwt.sign(
         {
           user: {
             username: "admin",
             role: "супер админ",
+            isActive: true,
+            email: "ganzoriggnz@gmail.com",
             level: 0,
             name: "Adminname",
           },

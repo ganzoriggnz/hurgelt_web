@@ -1,7 +1,6 @@
 import dbConnect, { rgx } from "@/lib/dbConnect";
-import InvoiceProductsModel from "@/models/invoices_products.model";
+import InvoiceModel from "@/models/invoices.model";
 import OrderModel from "@/models/orders.model";
-import OrderProductsModel from "@/models/orders_products.model";
 import ProductModel from "@/models/products.model";
 import type { NextApiRequest, NextApiResponse } from "next";
 import NextCors from "nextjs-cors";
@@ -31,27 +30,31 @@ export default async function handler(
       code: { $regex: searchRgx, $options: "i" },
     });
 
-    const invoiceProductsOrlogo = await InvoiceProductsModel.aggregate([
+    const invoiceProductsOrlogo = await InvoiceModel.aggregate([
       {
         $match: {
           type: "Орлого",
-
           created_at: {
             $gte: new Date(start),
             $lt: new Date(end),
           },
         },
       },
+      { $unwind: "$invoice_product" },
       {
         $group: {
-          _id: "$product",
-          too: {
-            $sum: "$too",
-          },
+          _id: "$invoice_product.product",
+          tooSum: { $sum: "$invoice_product.too" },
+        },
+      },
+      {
+        $addFields: {
+          product: "$_id",
+          _id: "$$REMOVE",
         },
       },
     ]);
-    const invoiceProductsZarlaga = await InvoiceProductsModel.aggregate([
+    const invoiceProductsZarlaga = await InvoiceModel.aggregate([
       {
         $match: {
           type: "Зарлага",
@@ -61,16 +64,21 @@ export default async function handler(
           },
         },
       },
+      { $unwind: "$invoice_product" },
       {
         $group: {
-          _id: "$product",
-          too: {
-            $sum: "$too",
-          },
+          _id: "$invoice_product.product",
+          tooSum: { $sum: "$invoice_product.too" },
+        },
+      },
+      {
+        $addFields: {
+          product: "$_id",
+          _id: "$$REMOVE",
         },
       },
     ]);
-    const invoiceProductsHudulguun = await InvoiceProductsModel.aggregate([
+    const invoiceProductsHudulguun = await InvoiceModel.aggregate([
       {
         $match: {
           type: "Хөдөлгөөн",
@@ -80,12 +88,17 @@ export default async function handler(
           },
         },
       },
+      { $unwind: "$invoice_product" },
       {
         $group: {
-          _id: "$product",
-          too: {
-            $sum: "$too",
-          },
+          _id: "$invoice_product.product",
+          tooSum: { $sum: "$invoice_product.too" },
+        },
+      },
+      {
+        $addFields: {
+          product: "$_id",
+          _id: "$$REMOVE",
         },
       },
     ]);
@@ -99,13 +112,7 @@ export default async function handler(
     };
     const borluulagdsan = await OrderModel.find(where, {
       select: { order_products: 1 },
-    }).populate([
-      {
-        path: "order_products",
-        model: OrderProductsModel,
-        select: { too: 1, product: 1, _id: 0 },
-      },
-    ]);
+    });
     var borlogdsonZahialga: any[] = [];
     borluulagdsan.forEach((element) => {
       borlogdsonZahialga = borlogdsonZahialga.concat(element.order_products);
@@ -117,19 +124,19 @@ export default async function handler(
       const temp: any = JSON.parse(JSON.stringify(element));
 
       const hudulguun = invoiceProductsHudulguun.findLastIndex(
-        (e: any) => e?._id == temp?._id
+        (e: any) => e?.product == temp?._id
       );
-      temp.hudulguun = invoiceProductsHudulguun[hudulguun]?.too ?? 0;
+      temp.hudulguun = invoiceProductsHudulguun[hudulguun]?.tooSum ?? 0;
 
       const orlogo = invoiceProductsOrlogo.findLastIndex(
-        (e: any) => e?._id == temp?._id
+        (e: any) => e?.product == temp?._id
       );
-      temp.orlogodson = invoiceProductsOrlogo[orlogo]?.too ?? 0;
+      temp.orlogodson = invoiceProductsOrlogo[orlogo]?.tooSum ?? 0;
 
       const zarlaga = invoiceProductsZarlaga.findLastIndex(
-        (e: any) => e?._id == temp?._id
+        (e: any) => e?.product == temp?._id
       );
-      temp.zarlagadsan = invoiceProductsZarlaga[zarlaga]?.too ?? 0;
+      temp.zarlagadsan = invoiceProductsZarlaga[zarlaga]?.tooSum ?? 0;
 
       temp.hurgegdsen =
         borlogdsonZahialga

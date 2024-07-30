@@ -1,5 +1,4 @@
 import dbConnect from "@/lib/dbConnect";
-import DeliveryZoneModel from "@/models/deliveryzones.model";
 import UserModel from "@/models/users.model";
 import bcrypt from "bcrypt";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -20,7 +19,7 @@ export default async function handler(
     return;
   }
   try {
-    let { body, jolooch } = req.body;
+    let { body } = req.body;
 
     if (body) {
       await dbConnect();
@@ -44,10 +43,6 @@ export default async function handler(
         }
         body.name = body?.name ?? body.username;
         const data = await UserModel.create(body);
-        if (jolooch && data) {
-          jolooch.user = data?._id;
-          await DeliveryZoneModel.create(jolooch);
-        }
         res.status(200).json({ result: true, message: "Success", data });
       } else
         res

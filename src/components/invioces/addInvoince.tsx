@@ -156,9 +156,7 @@ const AddInvoiceModal = ({ handleCancel, handleOk, open, data }: any) => {
                 });
               }}
               level={type == "Зарлага" ? [4] : [3, 4]}
-              className={` ${
-                type == "Орлого" || type == "Зарлага" ? "hidden" : ""
-              }`}
+              className={` ${type == "Орлого" ? "hidden" : ""}`}
             />
             <SelectPadaanUserWidget2
               name={"to_user"}
@@ -166,11 +164,11 @@ const AddInvoiceModal = ({ handleCancel, handleOk, open, data }: any) => {
               firstLevel={
                 type == "Орлого" || type == "Хөдөлгөөн" ? 4 : undefined
               }
-              setFirstValue={(val: any) => {
-                registerform.setFieldsValue({
-                  to_user: val,
-                });
-              }}
+              // setFirstValue={(val: any) => {
+              //   registerform.setFieldsValue({
+              //     to_user: val,
+              //   });
+              // }}
               level={
                 type == "Орлого" || type == "Хөдөлгөөн"
                   ? [4]
@@ -178,9 +176,7 @@ const AddInvoiceModal = ({ handleCancel, handleOk, open, data }: any) => {
                   ? [3]
                   : [3, 4]
               }
-              className={` ${
-                type == "Орлого" || type == "Хөдөлгөөн" ? "hidden" : ""
-              }`}
+              // className={` ${type == "Хөдөлгөөн" ? "hidden" : ""}`}
               rules={[
                 {
                   required:

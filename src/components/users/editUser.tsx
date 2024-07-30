@@ -2,16 +2,19 @@ import axiosInstance from "@/lib/axios";
 import { IUser } from "@/types/next";
 import {
   Button,
+  Divider,
   Form,
   Input,
+  InputRef,
   Modal,
   Select,
+  Space,
   Spin,
   Switch,
   message,
 } from "antd";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const EditUserModal = ({
   handleCancel,
@@ -28,6 +31,27 @@ const EditUserModal = ({
   const [messageApi, contextHolder] = message.useMessage();
   const [loading, setloading] = useState(false);
 
+  const [isJolooch, setisJolooch] = useState(true);
+
+  const [items, setItems] = useState<string[]>([]);
+  const [name, setName] = useState("");
+  const inputRef = useRef<InputRef>(null);
+
+  const onNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setName(event.target.value);
+  };
+  const role = Form.useWatch("role", registerform);
+  const addItem = (
+    e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>
+  ) => {
+    e.preventDefault();
+    setItems([...items, name]);
+    setName("");
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 0);
+  };
+
   useEffect(() => {
     registerform.setFieldsValue({
       role: `${data?.role} ${data?.level}`,
@@ -38,6 +62,12 @@ const EditUserModal = ({
       email: data?.email,
       isOperator: data?.isOperator,
       isActive: data?.isActive,
+
+      zone: data?.zone,
+      duureg: data?.duureg,
+      car_mark: data?.car_mark,
+      car_number: data?.car_number,
+      car_desc: data?.car_desc,
     });
     return () => {};
   }, [data]);
@@ -60,6 +90,11 @@ const EditUserModal = ({
             password: values?.password?.trim(),
             role: values?.role?.split(" ")[0],
             level: values?.role?.split(" ")[1],
+            zone: values?.zone,
+            duureg: values?.duureg,
+            car_mark: values?.car_mark,
+            car_number: values?.car_number,
+            car_desc: values?.car_desc,
           },
         })
         .then((response) => {
@@ -92,6 +127,14 @@ const EditUserModal = ({
         });
     }
   };
+
+  useEffect(() => {
+    if (role && role == "жолооч 3") {
+      setisJolooch(true);
+    } else {
+      setisJolooch(false);
+    }
+  }, [role]);
 
   return (
     <Modal
@@ -219,6 +262,89 @@ const EditUserModal = ({
               <Switch className="bg-gray-400" />
             </Form.Item>
           </div>
+          {isJolooch && (
+            <div className="flex flex-col w-full">
+              <Form.Item
+                label="Дүүрэг"
+                name={"duureg"}
+                rules={[{ required: true, message: "" }]}
+              >
+                <Select
+                  style={{ width: 300 }}
+                  placeholder="Дүүрэг сонгох"
+                  options={[
+                    { label: "Баянзүрх", value: "Баянзүрх" },
+                    { label: "Сүхбаатар", value: "Сүхбаатар" },
+                    { label: "Чингэлтэй", value: "Чингэлтэй" },
+                    { label: "Хан-Уул", value: "Хан-Уул" },
+                    { label: "Сонгинохайрхан", value: "Сонгинохайрхан" },
+                    { label: "Баянгол", value: "Баянгол" },
+                    { label: "Налайх", value: "Налайх" },
+                    { label: "Багахангай", value: "Багахангай" },
+                    { label: "Багануур", value: "Багануур" },
+                  ]}
+                />
+              </Form.Item>
+
+              <Form.Item
+                label="Хүргэлтийн бүс"
+                name={"zone"}
+                rules={[{ required: true, message: "" }]}
+              >
+                <Select
+                  style={{ width: 300 }}
+                  placeholder="Бүсийг сонгох"
+                  dropdownRender={(menu) => (
+                    <>
+                      {menu}
+                      <Divider style={{ margin: "8px 0" }} />
+                      <Space style={{ padding: "0 8px 4px" }}>
+                        <Input
+                          placeholder="Шинэ бүсийг оруулах"
+                          ref={inputRef}
+                          value={name}
+                          onChange={onNameChange}
+                          onKeyDown={(e) => e.stopPropagation()}
+                        />
+                        <Button
+                          type="text"
+                          icon={
+                            <Image
+                              src={"/icons/square-plus-regular.svg"}
+                              alt="add"
+                              width={15}
+                              height={15}
+                            />
+                          }
+                          onClick={addItem}
+                          disabled={
+                            name == null || name == undefined || name == ""
+                          }
+                        >
+                          Нэмэх
+                        </Button>
+                      </Space>
+                    </>
+                  )}
+                  options={items.map((item) => ({ label: item, value: item }))}
+                />
+              </Form.Item>
+              <Form.Item name="car_mark" label="Машины марк">
+                <Input />
+              </Form.Item>
+              <Form.Item name="car_number" label="Машины дугаар">
+                <Input />
+              </Form.Item>
+              <Form.Item
+                labelCol={{ span: 24 }}
+                wrapperCol={{ span: 24 }}
+                name="car_desc"
+                label="Машины нэмэлт мэдээлэл"
+              >
+                <Input.TextArea rows={5} />
+              </Form.Item>
+            </div>
+          )}
 
           <Button
             className="w-1/2 px-1"

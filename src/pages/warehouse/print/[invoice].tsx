@@ -55,7 +55,7 @@ const PrintOrder = (props?: { invoice_id: string; invoice_data?: any }) => {
           <p className="min-w-[85px] text-right">Зарах үнэ</p>
           <p className="min-w-[80px] text-right">Бүгд</p>
         </div>
-        {props?.invoice_data?.invoice_products?.map(
+        {props?.invoice_data?.invoice_product?.map(
           (item: any, index: number) => {
             return (
               <div className="flex justify-between py-2 p-2" key={index}>
@@ -77,13 +77,13 @@ const PrintOrder = (props?: { invoice_id: string; invoice_data?: any }) => {
           <p className="min-w-[130px] text-left"></p>
           <p className="min-w-[50px] text-right">{props?.invoice_data?.too}ш</p>
           <p className="min-w-[85px] text-right">
-            {props?.invoice_data?.invoice_products
+            {props?.invoice_data?.invoice_product
               ?.reduce((a: number, b: any) => a + b.sale_price, 0)
               .toLocaleString()}
             ₮
           </p>
           <p className="min-w-[80px] text-right">
-            {props?.invoice_data?.invoice_products
+            {props?.invoice_data?.invoice_product
               ?.reduce((a: number, b: any) => a + b.sale_price * b.too, 0)
               .toLocaleString()}
             ₮
@@ -100,13 +100,17 @@ const PrintOrder = (props?: { invoice_id: string; invoice_data?: any }) => {
         <p>
           Хэнээс :{" "}
           <span className="font-semibold">
-            {props?.invoice_data?.from_username}
+            {props?.invoice_data?.from_user?.name} (
+            {props?.invoice_data?.from_username}-
+            {props?.invoice_data?.from_user?.phone})
           </span>
         </p>
         <p>
           Хэнд:{" "}
           <span className="font-semibold">
-            {props?.invoice_data?.to_username}
+            {props?.invoice_data?.to_user?.name} (
+            {props?.invoice_data?.to_username}-
+            {props?.invoice_data?.to_user?.phone})
           </span>
         </p>
       </div>

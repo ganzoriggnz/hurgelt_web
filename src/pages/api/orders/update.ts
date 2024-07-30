@@ -2,7 +2,6 @@ import dbConnect from "@/lib/dbConnect";
 import { sendNotificationfirebase } from "@/lib/firebase_func";
 import CustomerModel from "@/models/customers.model";
 import OrderModel from "@/models/orders.model";
-import UserModel from "@/models/users.model";
 import jwt from "jsonwebtoken";
 import { NextApiRequest, NextApiResponse } from "next";
 import NextCors from "nextjs-cors";
@@ -28,11 +27,7 @@ export default async function handler(
       (req?.cookies?.accessToken as string) ??
       req.headers?.authorization?.split("Bearer ").at(1)?.toString();
     const clientData: any = jwt.decode(token);
-    const clidcheck = await UserModel.findOne({
-      username: clientData?.user?.username,
-      isActive: true,
-    });
-    if (!clidcheck) {
+    if (clientData?.user?.isActive == false) {
       return res.status(401).json({
         result: false,
         message: "Байхгүй эсвэл идвэхгүй хэрэглэгч байна !!!",
@@ -40,15 +35,9 @@ export default async function handler(
     }
     if (body) {
       await CustomerModel.findByIdAndUpdate(body?.customer?._id, {
-        name: body?.name,
-        duureg: body?.duureg,
-        horoo: body?.horoo,
-        horoolol: body?.horoolol,
-        niitleg_bairshil: body?.niitleg_bairshil,
         address: body?.address,
-        other: body?.other,
       });
-
+      // console.log("body", body);
       let status = body?.status;
       if (body?.jolooch_user) {
         status = "Хүргэлтэнд";
@@ -70,7 +59,6 @@ export default async function handler(
           total_sale_price: body?.total_sale_price,
           delivery_total_price: body?.delivery_total_price,
           too: body?.too,
-          deliveryzone: body?.deliveryzone,
           jolooch: body?.jolooch_user,
           jolooch_username: body?.jolooch_username,
           zone: body?.zone,

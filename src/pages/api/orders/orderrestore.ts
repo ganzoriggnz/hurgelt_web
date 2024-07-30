@@ -1,7 +1,6 @@
 import dbConnect from "@/lib/dbConnect";
 import { sendNotificationfirebase } from "@/lib/firebase_func";
 import OrderModel from "@/models/orders.model";
-import OrderProductsModel from "@/models/orders_products.model";
 import { NextApiRequest, NextApiResponse } from "next";
 import NextCors from "nextjs-cors";
 
@@ -35,19 +34,14 @@ export default async function handler(
       };
       // console.log(body);
       await OrderModel.findByIdAndUpdate(id, body);
-      const order = await OrderModel.findById(id).populate([
-        {
-          path: "order_products",
-          model: OrderProductsModel,
-        },
-      ]);
+      const order = await OrderModel.findById(id);
 
       sendNotificationfirebase({
         users_id: [order?.jolooch_username],
         title: `${order.owner_name}-ажилтан  (${order?.order_number})дугаартай захиалгыг дахин сэргээв.`,
         body: `Захиалагчын утас: ${
           order?.customer_phone
-        }, Бараа: ${order.order_products
+        }, Бараа: ${order.order_product
           .map((item: any) => {
             return `(${item.product_name}-${item.too}ш)`;
           })

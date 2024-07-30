@@ -201,6 +201,20 @@ export default function AdminLayout({ children, hideHeader }: Props) {
           level: [0, 1, 2, 3, 4],
           subnav: [],
         },
+        {
+          label: "Орлого тушаалт",
+          icon: "file-invoice-dollar-solid.svg",
+          path: "/orlogo",
+          level: [0],
+          subnav: [],
+        },
+        {
+          label: "Захиалагч",
+          icon: "users-solid.svg",
+          level: [0, 1, 2, 3],
+          path: "/customers",
+          subnav: [],
+        },
       ],
     },
     {

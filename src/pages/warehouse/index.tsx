@@ -564,7 +564,7 @@ const WarehousePage = () => {
                   <p className="min-w-[85px] text-right">Зарах үнэ</p>
                   <p className="min-w-[80px] text-right">Бүгд</p>
                 </div>
-                {record?.invoice_products?.map((item: any, index: number) => {
+                {record?.invoice_product?.map((item: any, index: number) => {
                   return (
                     <div className="flex justify-between py-2 p-2" key={index}>
                       <p className="max-w-[110px] w-[80px] text-left">
@@ -588,13 +588,13 @@ const WarehousePage = () => {
                   <p className="min-w-[130px] text-left"></p>
                   <p className="min-w-[50px] text-right">{record?.too}ш</p>
                   <p className="min-w-[85px] text-right">
-                    {record?.invoice_products
+                    {record?.invoice_product
                       ?.reduce((a: number, b: any) => a + b.sale_price, 0)
                       .toLocaleString()}
                     ₮
                   </p>
                   <p className="min-w-[80px] text-right">
-                    {record?.invoice_products
+                    {record?.invoice_product
                       ?.reduce(
                         (a: number, b: any) => a + b.sale_price * b.too,
                         0

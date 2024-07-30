@@ -40,21 +40,26 @@ export default async function handler(
 
     const totalcnt = (await OrderModel.countDocuments(where)) ?? 0;
     const data = await OrderModel.find(where, {
-      order_products: 1,
+      order_product: 1,
     })
       .populate([
         {
-          path: "$order_products.product",
-          model: ProductModel,
-          select: { _id: 1, code: 1, name: 1 },
+          path: "order_product",
+          populate: {
+            path: "product",
+            model: ProductModel,
+            select: { _id: 1, code: 1, name: 1 },
+          },
         },
       ])
       .sort({ created_at: 1 });
 
     var borlogdsonZahialga: any[] = [];
     data.forEach((element) => {
-      borlogdsonZahialga = borlogdsonZahialga.concat(element.order_products);
+      borlogdsonZahialga = borlogdsonZahialga.concat(element.order_product);
     });
+    console.log("data", data);
+    console.log("borlogdsonZahialga", borlogdsonZahialga);
 
     var newlist: any[] = [];
     for (let index = 0; index < borlogdsonZahialga.length; index++) {

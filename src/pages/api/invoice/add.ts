@@ -26,26 +26,7 @@ export default async function handler(
     if (body) {
       console.log(body);
       await dbConnect();
-      // const lastinvoice = await InvoiceModel.findOne({ type: body?.type }).sort(
-      //   { _id: -1 }
-      // );
       const invoiceNumber = Date.now();
-      // if (lastinvoice) {
-      //   invoiceNumber =
-      //     dayjs(new Date()).format("YYMMDD") +
-      //     InvoiceNumber.next(
-      //       lastinvoice.invoice_number.substring(
-      //         lastinvoice.invoice_number.length - 4
-      //       )
-      //     );
-      // } else {
-      //   invoiceNumber =
-      //     dayjs(new Date()).format("YYMMDD") +
-      //     InvoiceNumber.next((body?.type == "Орлого" ? "A" : "S") + "000");
-      // }
-      console.log(" invoiceNumber", invoiceNumber);
-      // console.log(" body::: ", body);
-
       const dataInvoice = await InvoiceModel.create({
         _id: newId2,
         invoice_number: invoiceNumber,
@@ -74,12 +55,12 @@ export default async function handler(
             ? Number.parseInt(element?.too)
             : element?.too ?? 0;
 
-        if (element.type != "Хөдөлгөөн") {
+        if (body?.type != "Хөдөлгөөн") {
           try {
             await ProductModel.findByIdAndUpdate(element.product, {
               $inc: {
                 balance:
-                  element.type == "Орлого" ? element.too : element.too * -1,
+                  body?.type == "Орлого" ? element.too : element.too * -1,
               },
             });
           } catch (e) {
@@ -90,7 +71,7 @@ export default async function handler(
           }
         }
 
-        if (element.type == "Орлого") {
+        if (body?.type == "Орлого") {
           await UserBalancesModel.findOneAndUpdate(
             {
               owner: body?.to_user,
@@ -109,7 +90,7 @@ export default async function handler(
             },
             { upsert: true }
           );
-        } else if (element.type == "Зарлага") {
+        } else if (body?.type == "Зарлага") {
           await UserBalancesModel.findOneAndUpdate(
             {
               owner: body?.to_user,
@@ -152,7 +133,7 @@ export default async function handler(
               { upsert: true }
             );
           }
-        } else if (element.type == "Хөдөлгөөн") {
+        } else if (body?.type == "Хөдөлгөөн") {
           await UserBalancesModel.findOneAndUpdate(
             {
               owner: body?.to_user,

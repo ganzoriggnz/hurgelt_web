@@ -24,7 +24,7 @@ const SelectCustomerWidget = (props?: any) => {
             list.map((e: any) => {
               temp.push({
                 value: JSON.stringify(e),
-                label: e?.phone.toString() + " - " + e?.duureg.toString(),
+                label: e?.phone.toString(),
               });
             });
             if (temp.length > 0) setlist(temp);

@@ -70,7 +70,7 @@ const InvoiceProdutsModal = ({
           <p className="min-w-[85px] text-right">Зарах үнэ</p>
           <p className="min-w-[80px] text-right">Бүгд</p>
         </div>
-        {data?.invoice_products?.map((item: any, index: number) => {
+        {data?.invoice_product?.map((item: any, index: number) => {
           return (
             <div className="flex justify-between py-2 p-2" key={index}>
               <p className="min-w-[90px] text-left"> {item?.product_code}</p>
@@ -90,13 +90,13 @@ const InvoiceProdutsModal = ({
           <p className="min-w-[130px] text-left"></p>
           <p className="min-w-[50px] text-right">{data?.too}ш</p>
           <p className="min-w-[85px] text-right">
-            {data?.invoice_products
+            {data?.invoice_product
               ?.reduce((a: number, b: any) => a + b.sale_price, 0)
               .toLocaleString()}
             ₮
           </p>
           <p className="min-w-[80px] text-right">
-            {data?.invoice_products
+            {data?.invoice_product
               ?.reduce((a: number, b: any) => a + b.sale_price * b.too, 0)
               .toLocaleString()}
             ₮

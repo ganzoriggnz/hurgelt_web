@@ -1,13 +1,14 @@
-import AddDeliveryZoneModal from "@/components/deliveryzones/addZone";
-import EditDeliveryZoneModal from "@/components/deliveryzones/editZone";
+import AddUserModal from "@/components/users/addUser";
+import EditUserModal from "@/components/users/editUser";
 import { useData } from "@/helper/context";
 import axiosInstance from "@/lib/axios";
-import { IDeliveryZone } from "@/types/next";
+import { IUser } from "@/types/next";
 import { Button, Form, Input, Modal, Table, TableProps, message } from "antd";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const UsersPage = () => {
   const router = useRouter();
@@ -46,29 +47,25 @@ const UsersPage = () => {
     if (!loading) {
       setloading(true);
       try {
-        const result = await axiosInstance.post(
-          "/deliveryzone/getjoloochzone",
-          {
-            offset: data?.ofs ?? offset,
-            limit: data?.lim ?? limit,
-            sort: data?.sort ?? sort,
-            search: data?.search,
-          }
-        );
+        const result = await axiosInstance.post("/users/getusers", {
+          offset: data?.ofs ?? offset,
+          limit: data?.lim ?? limit,
+          sort: data?.sort ?? sort,
+          search: data?.search,
+          level: 3,
+        });
         if (result?.status == 200) {
           settableData(result?.data?.data);
           settotalcnt(result?.data?.totalcnt);
         }
       } catch (e: any) {
-        messageApi.open({
-          type: "error",
-          content: e?.toString(),
-        });
+        const toastId = Math.floor(new Date().getTime() / 5000);
+        toast.error(JSON.stringify(e), { toastId });
       }
       setloading(false);
     }
   };
-  const onChange: TableProps<IDeliveryZone>["onChange"] = (
+  const onChange: TableProps<IUser>["onChange"] = (
     pagination,
     filters,
     sorter,
@@ -179,13 +176,13 @@ const UsersPage = () => {
       dataIndex: "zone",
       key: "zone",
       sorter: true,
-      width: "25%",
+      width: "15%",
       editable: true,
     },
     {
-      title: "Жолоочийн нэр",
+      title: "Жолоочийн нэр (Нэвтрэх нэр)",
       dataIndex: "username",
-      width: "30%",
+      width: "20%",
       sorter: true,
       editable: true,
       render: (rec: any, item: any) => {
@@ -195,16 +192,16 @@ const UsersPage = () => {
               className="cursor-pointer hover:font-bold flex gap-5"
               onClick={() => {
                 //TODO joloochiin niit zahialgiin delgrengui jagsaaltiig harah tsonhruu usreh
-                router.push("/users/" + item?.user?._id);
+                router.push("/users/" + item?._id);
               }}
             >
-              {item?.user?.username}
+              {item?.name} ({item?.username})
             </div>
-            {item?.user?.location ? (
+            {item?.location ? (
               <Link
                 href={`https://www.google.com/maps/search/${
-                  JSON.parse(item?.user?.location)?.latitude
-                },+${JSON.parse(item?.user?.location)?.longitude}?entry=tts`}
+                  JSON.parse(item?.location)?.latitude
+                },+${JSON.parse(item?.location)?.longitude}?entry=tts`}
                 target="_blank"
               >
                 <Image
@@ -226,19 +223,14 @@ const UsersPage = () => {
       title: "Утас",
       dataIndex: "phone",
       key: "phone",
-      width: "25%",
+      width: "15%",
       sorter: true,
       editable: true,
       render: (rec: any, item: any) => {
         return (
-          <div
-            className="cursor-pointer hover:font-bold"
-            onClick={() => {
-              router.push("/");
-            }}
-          >
-            {item?.user?.phone}
-            {item?.user?.phone2 ? `, ${item?.user?.phone2}` : ""}
+          <div>
+            {item?.phone}
+            {item?.phone2 && `, ${item?.phone2}`}
           </div>
         );
       },
@@ -266,7 +258,7 @@ const UsersPage = () => {
       title: "",
       dataIndex: "",
       key: "key",
-      width: "5%",
+      width: "15%",
       editable: true,
       render: (rec: any, item: any) => {
         if (isdelete.includes(level))
@@ -282,22 +274,6 @@ const UsersPage = () => {
                   onClick={() => {
                     setselectedItem(rec);
                     seteditModal(true);
-                  }}
-                />
-              ) : (
-                <></>
-              )}{" "}
-              |
-              {isdelete.includes(level) ? (
-                <Image
-                  src={"/icons/trash-can-regular.svg"}
-                  alt="delete"
-                  width={15}
-                  height={15}
-                  className="text-red-500 cursor-pointer"
-                  onClick={() => {
-                    setselectedItem(rec);
-                    setdeleteModal(true);
                   }}
                 />
               ) : (
@@ -370,7 +346,7 @@ const UsersPage = () => {
           cancelText="Болих"
         ></Modal>
         {isAdd.includes(level) ? (
-          <AddDeliveryZoneModal
+          <AddUserModal
             open={insertModal}
             handleCancel={() => {
               setinsertModal(false);
@@ -384,11 +360,11 @@ const UsersPage = () => {
           <></>
         )}
         {isEdit.includes(level) ? (
-          <EditDeliveryZoneModal
+          <EditUserModal
             open={editModal}
             handleCancel={() => {
-              setselectedItem(null);
               seteditModal(false);
+              setselectedItem(null);
             }}
             handleOk={() => {
               seteditModal(false);
@@ -408,7 +384,7 @@ const UsersPage = () => {
         onChange={onChange}
         className="border mt-5 rounded-t-[8px] bg-[#E7ECF0] !text-[12px]"
         dataSource={tableData}
-        onRow={(record: IDeliveryZone, rowIndex) => {
+        onRow={(record: IUser, rowIndex) => {
           return {
             onClick: (event) => {
               // console.log("onclickROW:", record);

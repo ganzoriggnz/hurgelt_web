@@ -76,6 +76,26 @@ const userSchema = new Schema<IUser>(
       type: Date,
       default: new Date(),
     },
+    zone: {
+      type: String,
+      default: "",
+    },
+    duureg: {
+      type: String,
+      default: "",
+    },
+    car_mark: {
+      type: String,
+      default: "",
+    },
+    car_number: {
+      type: String,
+      default: "",
+    },
+    car_desc: {
+      type: String,
+      default: "",
+    },
   },
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );

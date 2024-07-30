@@ -1,6 +1,5 @@
 import dbConnect, { rgx } from "@/lib/dbConnect";
 import OrderModel from "@/models/orders.model";
-import OrderProductsModel from "@/models/orders_products.model";
 import ProductModel from "@/models/products.model";
 import type { NextApiRequest, NextApiResponse } from "next";
 import NextCors from "nextjs-cors";
@@ -29,7 +28,6 @@ export default async function handler(
     const productData = await ProductModel.find({
       code: { $regex: searchRgx, $options: "i" },
     });
-
     let where: any = {
       isCompleted: true,
       status: "Хүргэгдсэн",
@@ -42,17 +40,11 @@ export default async function handler(
       where.jolooch = jolooch;
     }
     const borluulagdsan = await OrderModel.find(where, {
-      // select: { order_products: 1 },
-    }).populate([
-      {
-        path: "order_products",
-        model: OrderProductsModel,
-        // select: { too: 1, product: 1, _id: 0 },
-      },
-    ]);
+      select: { order_product: 1 },
+    }).populate([]);
     var borlogdsonZahialga: any[] = [];
     borluulagdsan.forEach((element) => {
-      borlogdsonZahialga = borlogdsonZahialga.concat(element.order_products);
+      borlogdsonZahialga = borlogdsonZahialga.concat(element.order_product);
     });
 
     var newlist: any[] = [];

@@ -298,7 +298,7 @@ const OrdersPage = () => {
 
   const [deleteModal, setdeleteModal] = useState(false);
 
-  const deleteUser = async (id: string) => {
+  const deleteOrder = async (id: string) => {
     if (!loading && deleteModal) {
       setloading(true);
       try {
@@ -490,13 +490,6 @@ const OrdersPage = () => {
         );
       },
     },
-    // {
-    //   title: "Тоо",
-    //   dataIndex: "too",
-    //   width: "5%",
-    //   sorter: true,
-    //   editable: true,
-    // },
     {
       title: "Нийт дүн",
       dataIndex: "total_price",
@@ -524,7 +517,7 @@ const OrdersPage = () => {
       sorter: true,
       editable: true,
       render: (value: any) => {
-        return <>{dayjs(value).format("YYYY/MM/DD HH:mm:ss")}</>;
+        return <>{dayjs(value).format("YYYY/MM/DD")}</>;
       },
     },
     {
@@ -650,22 +643,6 @@ const OrdersPage = () => {
           >
             Хайх
           </button>
-          {/* <Select
-            className="w-[150px] bg-white text-[12px]"
-            defaultValue={status}
-            onChange={(val) => {
-              setstatus(val);
-            }}
-            options={[
-              { label: "Бүгд", value: "" },
-              { label: "Ноорог", value: "Ноорог" },
-              { label: "Бүртгэсэн", value: "Бүртгэсэн" },
-              { label: "Цуцлагдсан", value: "Цуцлагдсан" },
-              { value: "Хүргэлтэнд", label: "Хүргэлтэнд" },
-              { value: "Буцаасан", label: "Буцаасан" },
-              { label: "Хүргэгдсэн", value: "Хүргэгдсэн" },
-            ]}
-          /> */}
         </div>
         <div className="flex gap-2 items-center text-[12px]">
           <div className="flex gap-2">
@@ -706,7 +683,7 @@ const OrdersPage = () => {
           open={deleteModal}
           onOk={() => {
             setdeleteModal(false);
-            if (selectedItem) deleteUser(selectedItem._id);
+            if (selectedItem) deleteOrder(selectedItem._id);
           }}
           onCancel={() => {
             setdeleteModal(false);

@@ -92,17 +92,15 @@ const EditOrderModal = ({
             payment_type: values?.payment_type,
             isPaid: values?.is_paid,
             nemelt: values?.nemelt,
-            // status: values?.status,
-            order_products: order_products,
             order_product: order_products?.map((items: any) => {
               const prod = items?.product ? JSON.parse(items?.product) : {};
               return {
                 product: prod._id,
-                product_code: prod.product_code,
-                product_name: prod.product_name,
+                product_code: prod.code,
+                product_name: prod.name,
                 delivery_price: prod.delivery_price,
-                sale_price: prod.sale_price,
-                too: prod.too,
+                sale_price: prod.price,
+                too: items.too,
               };
             }),
             total_price: totalTulber,
@@ -118,12 +116,9 @@ const EditOrderModal = ({
               0
             ),
             too: order_products?.reduce((a: number, b: any) => a + b?.too, 0),
-            deliveryzone: values?.jolooch ? joloodhtemp?._id : null,
-            jolooch_user: values?.jolooch ? joloodhtemp?.user?._id : null,
-            jolooch_username: values?.jolooch
-              ? joloodhtemp?.user?.username
-              : null,
-            zone: values?.jolooch ? joloodhtemp?.zone : null,
+            jolooch_user: joloodhtemp?._id,
+            jolooch_username: joloodhtemp?.username,
+            zone: joloodhtemp?.zone,
             huleejawahudur: dayjs(values?.hurgelt_date, dateFormat).toDate(),
             huleejawahtsag: values?.hurgelt_tsag,
           },
@@ -221,7 +216,7 @@ const EditOrderModal = ({
           ? joloochList.findLast((a) => a?.value?.includes(data?.jolooch?._id))
           : JSON.stringify(data?.jolooch),
         duureg: data?.duureg,
-        order_product: data?.order_product
+        order_products: data?.order_product
           ? data?.order_product.map((item: any) => {
               return {
                 too: item?.too,
