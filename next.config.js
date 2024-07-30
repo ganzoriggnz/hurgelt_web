@@ -22,12 +22,12 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'goyshop.com',
+        hostname: 'tulga-shop.com',
         port: '',
         pathname: '*',
       },
     ],
-    // domains: ['lh3.googleusercontent.com', 'https://firebaseinstallations.googleapis.com', 'https://goyshop.com'],
+    // domains: ['lh3.googleusercontent.com', 'https://firebaseinstallations.googleapis.com', 'https://tulga-shop.com'],
   },
   serverRuntimeConfig: {
     PROJECT_ROOT: __dirname
