@@ -14,7 +14,9 @@ const ImgComponent = ({
   alt: string;
   className: string;
 }) => {
-  const [rsrc, setSrc] = useState<string>(src);
+  const [rsrc, setSrc] = useState<string>(
+    src?.replace("/uploads", "https://images.tulga-shop.com")
+  );
   return (
     <Image
       radius="none"
