@@ -132,7 +132,7 @@ const AddOrderModal = ({ handleCancel, handleOk, getDataReset, open }: any) => {
                 product_name: prod.name,
                 delivery_price: prod.delivery_price,
                 sale_price: prod.price,
-                too: prod.too,
+                too: items.too,
               };
             }),
             total_price: totalTulber,
