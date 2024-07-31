@@ -38,6 +38,8 @@ const apiTokenpath: string[] = [
   "/api/users/update",
   "/api/users/balanceupdate",
   "/api/products",
+  "/api/products/update",
+  "/api/products/register",
   // "/api/products/getproducts",
   "/api/profile",
   // "/api/auth/logout",
