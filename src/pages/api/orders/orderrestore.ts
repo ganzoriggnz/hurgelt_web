@@ -21,7 +21,7 @@ export default async function handler(
   try {
     let { id } = req.body;
     console.log(req.body);
-    await dbConnect();
+
     if (id) {
       let body: any = {
         completedDate: null,
@@ -33,6 +33,7 @@ export default async function handler(
         status: "Хүргэлтэнд",
       };
       // console.log(body);
+      await dbConnect();
       await OrderModel.findByIdAndUpdate(id, body);
       const order = await OrderModel.findById(id);
 

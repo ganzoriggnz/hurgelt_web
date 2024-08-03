@@ -22,7 +22,7 @@ export default async function handler(
   }
   try {
     let { body } = req.body;
-    await dbConnect();
+
     const token =
       (req?.cookies?.accessToken as string) ??
       req.headers?.authorization?.split("Bearer ").at(1)?.toString();
@@ -34,6 +34,7 @@ export default async function handler(
       });
     }
     if (body) {
+      await dbConnect();
       await CustomerModel.findByIdAndUpdate(body?.customer?._id, {
         address: body?.address,
       });

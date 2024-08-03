@@ -42,6 +42,7 @@ export default async function handler(
       (req?.cookies?.accessToken as string) ??
       req.headers?.authorization?.split("Bearer ").at(1)?.toString();
     const clientData: any = jwt.decode(token);
+    await dbConnect();
     const clidcheck = await UserModel.findOne({
       username: clientData?.user?.username,
       isActive: true,
