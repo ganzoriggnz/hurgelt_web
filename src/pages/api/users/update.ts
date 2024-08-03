@@ -24,6 +24,7 @@ export default async function handler(
   } else
     try {
       let { body } = req.body;
+      console.log(body);
       await dbConnect();
       if (body) {
         if (body.phone) {
