@@ -191,7 +191,10 @@ const Login = () => {
             </div>
           </div>
 
-          <div className="flex justify-center gap-5 mt-5">
+          <div className="font-bold flex justify-center mt-5">
+            Жолоочын апп татах
+          </div>
+          <div className="flex justify-center gap-5 mt-1">
             <Link href={"/assets/guru.apk"} target="_blank">
               <Image
                 className="cursor-pointer"
