@@ -34,8 +34,8 @@ export default async function handler(
 
       if (orderData && orderData.status == "Хүргэгдсэн") {
         console.log("order", orderData.status);
-        for (let index = 0; index < orderData?.order_products.length; index++) {
-          const element: any = orderData?.order_products[index];
+        for (let index = 0; index < orderData?.order_product.length; index++) {
+          const element: any = orderData?.order_product[index];
           await UserBalancesModel.findOneAndUpdate(
             {
               owner: orderData?.jolooch,

@@ -192,7 +192,7 @@ const Login = () => {
           </div>
 
           <div className="flex justify-center gap-5 mt-5">
-            <Link href={"/assets/hurgelt.apk"} target="_blank">
+            <Link href={"/assets/guru.apk"} target="_blank">
               <Image
                 className="cursor-pointer"
                 onClick={() => {}}
@@ -202,7 +202,7 @@ const Login = () => {
                 height={40}
               />
             </Link>
-            <Link href="https://app.tulga-shop.com" target="_blank">
+            <Link href="https://app.tulga-shop.com?shop=start" target="_blank">
               <Image
                 className="cursor-pointer"
                 src={"/assets/iphone.png"}
