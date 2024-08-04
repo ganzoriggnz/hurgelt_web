@@ -52,8 +52,11 @@ export default async function handler(
     const data = await OrderModel.find(where)
       .populate([
         {
-          path: "product",
-          model: ProductModel,
+          path: "order_product",
+          populate: {
+            path: "product",
+            model: ProductModel,
+          },
         },
         {
           path: "owner",

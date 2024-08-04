@@ -47,7 +47,7 @@ const SelectJoloochWidget = (props?: any) => {
   }, [searchjolooch]);
 
   return (
-    <Form.Item rules={[{ required: true, message: "" }]} {...props}>
+    <Form.Item {...props}>
       <Select
         disabled={props?.disabled}
         className="mr-2"

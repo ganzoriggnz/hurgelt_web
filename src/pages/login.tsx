@@ -195,7 +195,7 @@ const Login = () => {
             Жолоочын апп татах
           </div>
           <div className="flex justify-center gap-5 mt-1">
-            <Link href={"/assets/guru.apk"} target="_blank">
+            <Link href={"/assets/hurgelt.apk"} target="_blank">
               <Image
                 className="cursor-pointer"
                 onClick={() => {}}

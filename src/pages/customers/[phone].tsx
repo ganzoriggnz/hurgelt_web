@@ -267,7 +267,7 @@ const OrdersPage = (props?: { phone: string }) => {
       render: (rec: any, item: any) => {
         return (
           <div className="flex flex-col">
-            {rec?.order_products?.map((baraa: any, index: number) => {
+            {rec?.order_product?.map((baraa: any, index: number) => {
               return (
                 <div key={index}>
                   {baraa?.product_name} ({baraa?.too})
