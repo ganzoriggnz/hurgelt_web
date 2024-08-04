@@ -36,8 +36,8 @@ export default async function handler(
     ]);
 
     if (invoice) {
-      for (let index = 0; index < invoice?.invoice_products.length; index++) {
-        const element: any = invoice?.invoice_products[index];
+      for (let index = 0; index < invoice?.invoice_product.length; index++) {
+        const element: any = invoice?.invoice_product[index];
         try {
           await ProductModel.findByIdAndUpdate(element.product, {
             $inc: {

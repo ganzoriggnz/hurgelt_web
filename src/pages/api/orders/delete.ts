@@ -53,7 +53,7 @@ export default async function handler(
       }
     }
 
-    const temp = await OrderModel.findOneAndDelete({
+    await OrderModel.findOneAndDelete({
       _id: id ?? req.body?.id,
     });
     res.status(200).json({ result: true, message: "Success" });

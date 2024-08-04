@@ -19,7 +19,15 @@ export default async function handler(
     return;
   }
   try {
-    let { id, duureg, address, huleejawahudur, newList, oldList } = req.body;
+    let {
+      id,
+      duureg,
+      address,
+      huleejawahudur,
+      newList,
+      oldList,
+      order_product,
+    } = req.body;
 
     console.log("orderchangeUpdate:::::::: :", req.body);
 
@@ -27,20 +35,21 @@ export default async function handler(
       let body: any = {
         duureg: duureg,
         address: address,
+        order_product: order_product,
         huleejawahudur: dayjs(huleejawahudur),
       };
 
-      var newtotal_sale_price = body.order_product.reduce(
+      var newtotal_sale_price = order_product.reduce(
         (a: number, b: any) => a + b.sale_price,
         0
       );
-      var newdelivery_total_price = body.order_product.reduce(
+      var newdelivery_total_price = order_product.reduce(
         (a: number, b: any) => a + b.delivery_price,
         0
       );
-      body.too = body.order_product.reduce((a: number, b: any) => a + b.too, 0);
+      body.too = order_product.reduce((a: number, b: any) => a + b.too, 0);
       body.total_price = newtotal_sale_price + newdelivery_total_price;
-      body.order_product = body.order_product;
+      body.order_product = order_product;
       body.total_sale_price = newtotal_sale_price;
       body.delivery_total_price = newdelivery_total_price;
 
