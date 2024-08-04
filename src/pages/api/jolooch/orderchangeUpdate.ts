@@ -40,11 +40,11 @@ export default async function handler(
       };
 
       var newtotal_sale_price = order_product.reduce(
-        (a: number, b: any) => a + b.sale_price,
+        (a: number, b: any) => a + b.sale_price * b.too,
         0
       );
       var newdelivery_total_price = order_product.reduce(
-        (a: number, b: any) => a + b.delivery_price,
+        (a: number, b: any) => a + b.delivery_price * b?.too,
         0
       );
       body.too = order_product.reduce((a: number, b: any) => a + b.too, 0);
