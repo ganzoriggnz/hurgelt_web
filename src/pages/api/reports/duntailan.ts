@@ -40,8 +40,8 @@ export default async function handler(
       where.jolooch = jolooch;
     }
     const borluulagdsan = await OrderModel.find(where, {
-      select: { order_product: 1 },
-    }).populate([]);
+      order_product: 1
+     });
     var borlogdsonZahialga: any[] = [];
     borluulagdsan.forEach((element) => {
       borlogdsonZahialga = borlogdsonZahialga.concat(element.order_product);
@@ -58,9 +58,11 @@ export default async function handler(
           .reduce((a: number, b: any) => {
             return a + b.too;
           }, 0) ?? 0;
-      temp.key = index;
-      if (temp.hurgegdsen > 0) newlist.push(temp);
+      temp.key = index;      
+      if (temp.hurgegdsen > 0)
+        newlist.push(temp);
     }
+    
 
     res.status(200).json({
       result: true,

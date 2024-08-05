@@ -111,11 +111,11 @@ export default async function handler(
       },
     };
     const borluulagdsan = await OrderModel.find(where, {
-      select: { order_products: 1 },
-    });
+      order_product: 1
+     });
     var borlogdsonZahialga: any[] = [];
     borluulagdsan.forEach((element) => {
-      borlogdsonZahialga = borlogdsonZahialga.concat(element.order_products);
+      borlogdsonZahialga = borlogdsonZahialga.concat(element.order_product);
     });
 
     var newlist: any[] = [];

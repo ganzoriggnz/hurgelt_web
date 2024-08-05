@@ -58,20 +58,19 @@ export default async function handler(
       },
     };
     const borluulagdsan = await OrderModel.find(where, {
-      select: { order_product: 1 },
+     order_product: 1
     });
     var borlogdsonZahialga: any[] = [];
     borluulagdsan.forEach((element) => {
       borlogdsonZahialga = borlogdsonZahialga.concat(element.order_product);
     });
-
     var newlist: any[] = [];
     for (let index = 0; index < productData.length; index++) {
       const element = productData[index];
       const temp: any = JSON.parse(JSON.stringify(element));
       temp.hurgegdsen =
         borlogdsonZahialga
-          .filter((e) => e.product == element.id)
+          .filter((e) => e?.product == element.id)
           .reduce((a: number, b: any) => {
             return a + b.too;
           }, 0) ?? 0;

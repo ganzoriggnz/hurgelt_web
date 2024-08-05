@@ -29,7 +29,6 @@ const { Text } = Typography;
 const UserDetials = (props?: {
   memberId: string;
   memberData?: any;
-  jolooch?: any;
 }) => {
   const router = useRouter();
   const location: any = props?.memberData?.location
@@ -677,7 +676,7 @@ const UserDetials = (props?: {
             </div>
             <div className="w-full flex gap-1">
               <p className="w-full text-[12px] font-bold">Машины марк: </p>
-              <p className="w-full">{props?.jolooch?.car_mark}</p>
+              <p className="w-full">{props?.memberData?.car_mark}</p>
             </div>
           </div>
           <div className="w-full flex flex-col">
@@ -691,7 +690,7 @@ const UserDetials = (props?: {
             </div>
             <div className="w-full flex gap-1">
               <p className="w-full text-[12px] font-bold">Машины дугаар: </p>
-              <p className="w-full">{props?.jolooch?.car_number}</p>
+              <p className="w-full">{props?.memberData?.car_number}</p>
             </div>
           </div>
           <div className="w-full flex flex-col">
@@ -705,7 +704,7 @@ const UserDetials = (props?: {
             </div>
             <div className="w-full flex gap-1">
               <p className="w-full text-[12px] font-bold">Машины нэмэлт: </p>
-              <p className="w-full">{props?.jolooch?.car_desc}</p>
+              <p className="w-full">{props?.memberData?.car_desc}</p>
             </div>
           </div>
           <div className="w-full flex flex-col">
@@ -730,7 +729,7 @@ const UserDetials = (props?: {
             <div className="w-full flex gap-1">
               <p className="w-full text-[12px] font-bold">Хариуцсан бүс:</p>
               <p className="w-full">
-                {props?.jolooch?.duureg} ( {props?.jolooch?.zone} )
+                {props?.memberData?.duureg} ( {props?.memberData?.zone} )
               </p>
             </div>
           </div>
@@ -1182,7 +1181,6 @@ export async function getServerSideProps(context: any) {
   try {
     const data = context?.query?.id?.toString().trim() ?? "";
     var memberData: any = {};
-    var jolooch: any = {};
     const ooo: any = jwt.decode(context.req.cookies["accessToken"]);
     if (![0, 1].includes(ooo?.user?.level)) {
       return {
@@ -1199,12 +1197,10 @@ export async function getServerSideProps(context: any) {
 
     if (data && res?.["status"] === 200 && res?.data?.data != null) {
       memberData = res?.data?.data;
-      jolooch = res?.data?.jolooch;
       return {
         props: {
           memberId: data,
           memberData: memberData,
-          jolooch: jolooch,
         },
       };
     } else {

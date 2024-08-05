@@ -22,7 +22,7 @@ const BorluulaltPage = () => {
   const nowDate = new Date();
   const current = new Date(nowDate.setHours(0, 0, 0, 0));
   const [startDate, setStartDate] = useState<Date>(
-    new Date(current.setDate(current.getDate()))
+    new Date(current.setDate(current.getDate()-7))
   );
   const [endDate, setEndDate] = useState<Date>(
     new Date(nowDate.setHours(23, 59, 59, 99))
