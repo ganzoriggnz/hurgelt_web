@@ -349,27 +349,33 @@ const OrdersPage = () => {
     {
       title: "",
       dataIndex: "isCompleted",
-      width: 20,
-      editable: true,
+      width: "2%",
       render: (rec: any, item: any) => {
         return (
           <div>
             {item?.isCompleted ? (
+              item?.status == 'Хүргэгдсэн' ? 
               <Image
                 src={"/icons/circle-check-regular.svg"}
                 alt="pause"
-                width={15}
-                height={15}
+                width={20}
+                height={20}
                 className={` ${
                   item?.isPaid ? "text-green-400" : "text-red-400"
                 } `}
-              />
+              /> :<Image
+              src={"/icons/circle-minus-solid.svg"}
+              alt="pause"
+              width={20}
+              height={20}
+              className={"text-red-400"}
+            />
             ) : (
               <Image
                 src={"/icons/circle-pause-regular.svg"}
                 alt="pause"
-                width={15}
-                height={15}
+                width={20}
+                height={20}
                 className="text-blue-950"
               />
             )}
@@ -753,11 +759,20 @@ const OrdersPage = () => {
         size="small"
         columns={columns}
         rowClassName={(record: any, index) =>
-          dayjs(record?.created_at).format("YYYY/MM/DD") ==
-          dayjs().format("YYYY/MM/DD")
-            ? "today-row"
-            : ""
+        {
+          let namecc = '';
+
+          if (dayjs(record?.created_at).format("YYYY/MM/DD") == dayjs().format("YYYY/MM/DD"))
+               namecc+= "today-row ";
+          if (record.isCompleted && record?.status == 'Хүргэгдсэн' )
+            namecc+= " order-complete-row ";
+          else  if (record.isCompleted)
+            namecc+= " order-notcomplete-row ";
+
+
+          return namecc
         }
+      }
         pagination={{
           total: totalcnt,
           pageSize: limit,

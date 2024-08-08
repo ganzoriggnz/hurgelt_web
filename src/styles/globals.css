@@ -17,7 +17,13 @@ body {
     height: 100vh;
 }
 .today-row{
-    background-color: #f5f5f9 !important;
+    background-color: #ffffff !important;
+}
+.order-complete-row{
+    color: green !important;
+}
+.order-notcomplete-row{
+    color: red !important;
 }
 .ant-btn-primary {
     background-color: #3a3f51 !important;
