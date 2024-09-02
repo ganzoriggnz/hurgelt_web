@@ -62,9 +62,9 @@ export default async function handler(
     const totalDataUnComplete = await OrderModel.aggregate([
       {
         $match: {
-          isCompleted: true,
+          // isCompleted: true,
           jolooch_username: { $ne: null },
-          completedDate: {
+          updated_at: {
             $gte: new Date(start),
             $lt: new Date(end),
           },
