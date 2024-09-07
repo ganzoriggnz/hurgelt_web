@@ -8,7 +8,6 @@ import { useEffect, useRef, useState } from "react";
 import type { DraggableData, DraggableEvent } from "react-draggable";
 import Draggable from "react-draggable";
 import { toast } from "react-toastify";
-import SelectCustomerWidget from "../select_customer";
 import SelectJoloochWidget from "../select_jolooch";
 import SelectProductWidget from "../select_product";
 
@@ -263,13 +262,24 @@ const AddOrderModal = ({ handleCancel, handleOk, getDataReset, open }: any) => {
         >
           <div className="flex flex-col w-full">
             <div className="flex-col justify-start w-full p-4 border">
-              <SelectCustomerWidget
+              <Form.Item
                 name={"customer_phone"}
                 label="Утас"
                 className="mb-1"
                 wrapperCol={{ span: 24 }}
-                rules={[{ required: true, message: "" }]}
-              />
+                rules={[
+                  { required: true, message: "" },
+                  { len: 8, message: "Утасны дугаар заавал 8 оронтой байна!" },
+                ]}
+              >
+                <Input
+                  type="number"
+                  autoFocus={true}
+                  maxLength={8}
+                  minLength={8}
+                />
+              </Form.Item>
+
               {isToday ? (
                 <Link
                   className="text-red-600 w-full flex justify-end mb-1 flex-col items-end"
