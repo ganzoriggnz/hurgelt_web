@@ -82,7 +82,12 @@ const UldegdelPage = () => {
           limit: 200,
           sort: data?.sort ?? sort,
           search: data?.search,
-          jolooch: joloochId != null ? JSON?.parse(joloochId)?._id : "",
+          jolooch:
+            joloochId != null
+              ? joloochId == "isBugd"
+                ? joloochId
+                : JSON?.parse(joloochId)?._id
+              : "",
         });
         if (result?.status == 200) {
           settableData(result?.data?.data);
@@ -241,12 +246,26 @@ const UldegdelPage = () => {
       sorter: true,
       width: "3%",
       editable: true,
+      render: (rec: any, item: any) => {
+        return (
+          <div>
+            {joloochId == "isBugd" ? item?._id?.code : item?.product_code}
+          </div>
+        );
+      },
     },
     {
       title: "Барааны нэр",
       dataIndex: "product_name",
       sorter: true,
       width: "10%",
+      render: (rec: any, item: any) => {
+        return (
+          <div>
+            {joloochId == "isBugd" ? item?._id?.name : item?.product_name}
+          </div>
+        );
+      },
     },
 
     {
@@ -256,8 +275,9 @@ const UldegdelPage = () => {
       render: (rec: any, item: any) => {
         return (
           <div>
-            {(
-              item?.product?.price + item?.product?.delivery_price
+            {(joloochId == "isBugd"
+              ? item?._id?.price + item?._id?.delivery_price
+              : item?.product?.price + item?.product?.delivery_price
             )?.toLocaleString()}
             ₮
           </div>
@@ -301,7 +321,9 @@ const UldegdelPage = () => {
       align: "center",
       render: (rec: any, item: any) => {
         return (
-          <div>{item?.orlogodson - item?.zarlagadsan - item?.hurgegdsen}</div>
+          <div className="font-bold">
+            {item?.orlogodson - item?.zarlagadsan - item?.hurgegdsen}
+          </div>
         );
       },
     },
@@ -432,16 +454,19 @@ const UldegdelPage = () => {
                           className="m-0 bg-white"
                           name={"jolooch"}
                           level={[3, 4]}
+                          isBugd={true}
                         />
                       </Form>
                     </div>
-                    <Button
-                      disabled={!joloochId || tableData?.length == 0}
-                      onClick={showModal}
-                    >
-                      {" "}
-                      Тооцоо дуусгах
-                    </Button>
+                    {joloochId != "isBugd" && (
+                      <Button
+                        disabled={!joloochId || tableData?.length == 0}
+                        onClick={showModal}
+                      >
+                        {" "}
+                        Тооцоо дуусгах
+                      </Button>
+                    )}
                     <Modal
                       title="Тооцоо дуусгах"
                       open={open}
@@ -483,7 +508,7 @@ const UldegdelPage = () => {
                 <div className="h-full ">
                   <div className="flex justify-between ">
                     <div className="flex gap-4 items-center">
-                      <p>Мөрийн тоо: {totalcnt2}</p>
+                      <p>Мөрийн тоо: {totalcnt}</p>
                     </div>
                     <EditUldeglModal
                       open={editModal}
@@ -498,22 +523,24 @@ const UldegdelPage = () => {
                       }}
                       data={selectedItem}
                     />
-                    <div className="flex gap-2 items-center">
-                      <Button
-                        className="flex items-center"
-                        loading={loading2}
-                        onClick={() => {
-                          getData();
-                        }}
-                      >
-                        <Image
-                          src={"/icons/rotate-right-solid.svg"}
-                          alt="refresh"
-                          width={15}
-                          height={15}
-                        />
-                      </Button>
-                    </div>
+                    {
+                      <div className="flex gap-2 items-center">
+                        <Button
+                          className="flex items-center"
+                          loading={loading2}
+                          onClick={() => {
+                            getData();
+                          }}
+                        >
+                          <Image
+                            src={"/icons/rotate-right-solid.svg"}
+                            alt="refresh"
+                            width={15}
+                            height={15}
+                          />
+                        </Button>
+                      </div>
+                    }
                   </div>
                   <Table
                     loading={loading}
@@ -524,7 +551,19 @@ const UldegdelPage = () => {
                     dataSource={tableData}
                     size="small"
                     columns={columns}
-                    rowClassName="editable-row"
+                    rowClassName={(record: any, index) =>
+                      record?.orlogodson -
+                        record?.zarlagadsan -
+                        record?.hurgegdsen <
+                      1
+                        ? "editable-row  bg-[#FFD4D4]"
+                        : record?.orlogodson -
+                            record?.zarlagadsan -
+                            record?.hurgegdsen <=
+                          50
+                        ? "editable-row bg-[#FFE79D7E]"
+                        : "editable-row  "
+                    }
                     pagination={false}
                   />
                 </div>

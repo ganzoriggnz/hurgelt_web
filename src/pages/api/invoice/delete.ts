@@ -42,7 +42,7 @@ export default async function handler(
           await ProductModel.findByIdAndUpdate(element.product, {
             $inc: {
               balance:
-                element.type == "Орлого" ? element.too * -1 : element.too,
+                invoice.type == "Орлого" ? element.too * -1 : element.too,
             },
           });
         } catch (e) {

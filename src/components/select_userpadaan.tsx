@@ -9,7 +9,9 @@ const SelectPadaanUserWidget = (props?: any) => {
   const [loading, setloading] = useState(false);
 
   const getUserList = async () => {
-    const templist = sessionStorage.getItem("getUser2" + props?.level ?? "");
+    const templist = sessionStorage.getItem(
+      "getJoloochAguulah" + (props?.level ?? "")
+    );
     if (templist) {
       setjoloochList(JSON.parse(templist));
     } else {
@@ -24,6 +26,12 @@ const SelectPadaanUserWidget = (props?: any) => {
           if (val?.["status"] === 200) {
             const list = val?.data?.data;
             var temp: any[] = [];
+            if (props?.isBugd) {
+              temp.push({
+                value: "isBugd",
+                label: "Бүгд",
+              });
+            }
             list.map((e: any) => {
               temp.push({
                 value: JSON.stringify(e),
@@ -38,7 +46,7 @@ const SelectPadaanUserWidget = (props?: any) => {
             if (temp.length > 0) {
               setjoloochList(temp);
               sessionStorage.setItem(
-                "getUser2" + props?.level ?? "",
+                "getJoloochAguulah" + (props?.level ?? ""),
                 JSON.stringify(temp)
               );
             } else setjoloochList(joloochList2);
@@ -72,11 +80,11 @@ const SelectPadaanUserWidget = (props?: any) => {
           // setsearchjolooch(input?.toLowerCase());
           // return option?.label;
         }}
-        filterSort={(optionA, optionB) =>
-          (optionA?.label ?? "")
-            .toLowerCase()
-            .localeCompare((optionB?.label ?? "").toLowerCase())
-        }
+        // filterSort={(optionA, optionB) =>
+        //   (optionA?.label ?? "")
+        //     .toLowerCase()
+        //     .localeCompare((optionB?.label ?? "").toLowerCase())
+        // }
       />
     </Form.Item>
   );

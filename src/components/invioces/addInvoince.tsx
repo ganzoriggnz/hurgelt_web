@@ -7,7 +7,6 @@ import axiosInstance from "@/lib/axios";
 import Image from "next/image";
 import { toast } from "react-toastify";
 import SelectPadaanUserWidget2 from "../select_userpadaan2";
-let index = 0;
 
 const AddInvoiceModal = ({ handleCancel, handleOk, open, data }: any) => {
   const [registerform] = Form.useForm();
@@ -15,9 +14,9 @@ const AddInvoiceModal = ({ handleCancel, handleOk, open, data }: any) => {
   const [loading, setloading] = useState(false);
   const invoice_products = Form.useWatch("invoice_products", registerform);
   const type = Form.useWatch("type", registerform);
-  const [level, setlevel] = useState([]);
-  const from_user = Form.useWatch("from_user", registerform);
   const submitHanlde = async (values: any) => {
+    if (values?.from_user == values?.to_user)
+      return toast.warning("Ижил хэрэглэгч сонгосон байна!!!");
     if (!loading) {
       setloading(true);
       axiosInstance

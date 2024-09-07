@@ -50,6 +50,7 @@ const OrderSchema = new Schema<IOrder>(
       ref: "Users",
       alias: "Жолоочийн  _id хэрэглэгчийн  ",
     },
+    joloochDate: { type: Date, default: null },
     jolooch_username: {
       type: String,
       default: null,

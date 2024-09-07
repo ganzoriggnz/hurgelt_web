@@ -80,6 +80,12 @@ export default async function handler(
       },
       { $sort: { totalSaleAmount: -1 } },
     ]);
+    let sorttemp: any = {};
+    if (sort?.huleejawahudur) {
+      sorttemp = { ...sort, joloochDate: 1 };
+    } else {
+      sorttemp = { ...sort, created_at: 1 };
+    }
     const data = await OrderModel.find(where)
       .populate([
         {
@@ -111,7 +117,7 @@ export default async function handler(
       ])
       .limit(limit ?? 30)
       .skip(offset)
-      .sort({ ...sort, created_at: 1 });
+      .sort(sorttemp);
     res.status(200).json({
       result: true,
       message: "Success",

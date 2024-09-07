@@ -51,6 +51,27 @@ const EditOrderModal = ({
       setZoneJolooch(JSON.parse(templist));
     }
   }, []);
+  const jolooch = Form.useWatch("jolooch", registerform);
+
+  useEffect(() => {
+    if (
+      data &&
+      !data?.joloochDate &&
+      !data?.jolooch_username &&
+      !data?.jolooch &&
+      jolooch &&
+      jolooch != "null" &&
+      jolooch != undefined
+    ) {
+      console.log("jolooch====", jolooch);
+      const datem = new Date();
+      setJoloochDate(datem);
+      registerform.setFieldsValue({
+        joloochDate: dayjs(datem).format("MM/DD HH:mm:ss"),
+      });
+    }
+  }, [jolooch, data]);
+  const [joloochDate, setJoloochDate] = useState<Date | undefined>();
 
   useEffect(() => {
     if (order_products?.length > 0) {
@@ -92,6 +113,7 @@ const EditOrderModal = ({
             payment_type: values?.payment_type,
             isPaid: values?.is_paid,
             nemelt: values?.nemelt,
+            joloochDate: data?.joloochDate,
             order_product: order_products?.map((items: any) => {
               const prod = items?.product ? JSON.parse(items?.product) : {};
               return {
@@ -381,6 +403,9 @@ const EditOrderModal = ({
                 name={"jolooch"}
                 label="Хүргэлт жолооч"
               />
+              <Form.Item label="Шилжүүлсэн огноо" name={"joloochDate"}>
+                <Input readOnly />
+              </Form.Item>
 
               <Form.Item
                 className="mb-3"

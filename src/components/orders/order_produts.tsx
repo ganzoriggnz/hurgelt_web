@@ -220,6 +220,9 @@ const OrdersProdutsModal = ({
             {data?.jolooch?.phone2 ? ", " + data?.jolooch?.phone2 : ""} )
           </span>
         </p>
+        <p className="font-semibold">
+          {dayjs(data?.joloochDate).format("YYYY/MM/DD HH:mm")}
+        </p>
       </div>
       <div className="flex gap-2 justify-between mb-3">
         {data?.from_username ? (

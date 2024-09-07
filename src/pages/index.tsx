@@ -16,7 +16,6 @@ import {
   TableProps,
   message,
 } from "antd";
-import { Excel } from "antd-table-saveas-excel";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import Image from "next/image";
@@ -492,10 +491,14 @@ const OrdersPage = () => {
       filters: joloochList,
       render: (rec: any, item: any) => {
         return (
-          <div className="cursor-pointer hover:font-bold flex gap-5">
+          <div className="cursor-pointer hover:font-bold flex flex-col">
             <Link href={`/users/` + item?.jolooch?._id} target="_blank">
               {item?.jolooch?.name} ({item?.jolooch?.phone})
             </Link>
+            <p className="text-[#6f6f6f] text-[10px]">
+              {item?.joloochDate &&
+                dayjs(item?.joloochDate).format("MM/DD HH:mm:ss")}
+            </p>
           </div>
         );
       },
@@ -517,7 +520,7 @@ const OrdersPage = () => {
       sorter: true,
       editable: true,
       render: (value: any) => {
-        return <>{dayjs(value).format("YYYY/MM/DD HH:mm:ss")}</>;
+        return <>{dayjs(value).format("MM/DD HH:mm:ss")}</>;
       },
     },
     {
@@ -526,8 +529,13 @@ const OrdersPage = () => {
       width: "10%",
       sorter: true,
       editable: true,
-      render: (value: any) => {
-        return <>{dayjs(value).format("YYYY/MM/DD")}</>;
+      render: (value: any, item: any) => {
+        return (
+          <div className="flex flex-col">
+            <p>{dayjs(item?.huleejawahudur).format("MM/DD")} </p>
+            <p>{item?.huleejawahtsag && `Цаг:${item?.huleejawahtsag}`}</p>
+          </div>
+        );
       },
     },
     {
@@ -585,7 +593,7 @@ const OrdersPage = () => {
         <p className="mb-5">Нийт {totalcnt}</p>
       </div>
       <div className="flex flex-wrap justify-between items-center gap-y-2 text-[12px]">
-        <div className="flex gap-1 items-center">
+        <div className="flex flex-wrap  gap-1 items-bottom">
           <DatePicker
             className="ml-0 md:ml-2 w-[130px]"
             defaultValue={dayjs(startDate)}
@@ -616,11 +624,7 @@ const OrdersPage = () => {
               className="text-[12px]  items-center m-0 flex gap-2"
               form={searchForm}
             >
-              <Form.Item
-                className="m-0 !text-[10px] w-[200px]"
-                label={"Хайх: "}
-                name={"search"}
-              >
+              <Form.Item className="m-0 !text-[10px] w-[200px]" name={"search"}>
                 <Input
                   type="text"
                   placeholder="Утас, Жолоочийн нэр,Дүүрэг,Захиалгын дугаар хайх"
@@ -687,29 +691,6 @@ const OrdersPage = () => {
               height={15}
             />
           </Button>
-          <div className="cursor-pointer">
-            <Image
-              width={24}
-              height={24}
-              src="/excel.svg"
-              onClick={() => {
-                if (tableData?.length > 0) {
-                  const excel = new Excel();
-                  excel
-                    .addSheet(`Sheet1`)
-                    .addColumns(columnsExcel)
-                    .addDataSource(tableData, { str2Percent: true })
-                    .saveAs(`products${new Date().getTime()}.xlsx`);
-                } else {
-                  messageApi.open({
-                    type: "warning",
-                    content: "데이터가 없습니다!",
-                  });
-                }
-              }}
-              alt=""
-            />
-          </div>
         </div>
         <Modal
           title="Устгахдаа итгэлтэй байна уу"
@@ -810,163 +791,3 @@ const OrdersPage = () => {
   );
 };
 export default OrdersPage;
-const columnsExcel = [
-  {
-    title: "",
-    dataIndex: "isCompleted",
-    width: 86,
-    render: (rec: any, item: any) => {
-      return (
-        <div>
-          {item?.isCompleted ? (
-            item?.status == "Хүргэгдсэн" ? (
-              <Image
-                src={"/icons/circle-check-regular.svg"}
-                alt="pause"
-                width={20}
-                height={20}
-                className={` ${
-                  item?.isPaid ? "text-green-400" : "text-red-400"
-                } `}
-              />
-            ) : (
-              <Image
-                src={"/icons/circle-minus-solid.svg"}
-                alt="pause"
-                width={20}
-                height={20}
-                className={"text-red-400"}
-              />
-            )
-          ) : (
-            <Image
-              src={"/icons/circle-pause-regular.svg"}
-              alt="pause"
-              width={20}
-              height={20}
-              className="text-blue-950"
-            />
-          )}
-        </div>
-      );
-    },
-  },
-  {
-    title: "Статус",
-    dataIndex: "status",
-    sorter: true,
-    width: 86,
-    // filterMultiple: false,
-    filters: [
-      { text: "Ноорог", value: "Ноорог" },
-      { text: "Бүртгэсэн", value: "Бүртгэсэн" },
-      { text: "Цуцлагдсан", value: "Цуцлагдсан" },
-      { value: "Хүргэлтэнд", text: "Хүргэлтэнд" },
-      { value: "Буцаасан", text: "Буцаасан" },
-      { text: "Хүргэгдсэн", value: "Хүргэгдсэн" },
-    ],
-  },
-  {
-    title: "Тайлбар",
-    dataIndex: "completeTailbar",
-    width: 86,
-  },
-  {
-    title: "Бүртгэсэн",
-    dataIndex: "owner_name",
-    sorter: true,
-    width: 86,
-    editable: true,
-    filter: true,
-  },
-  {
-    title: "Захиалагчийн утас",
-    dataIndex: "customer_phone",
-    width: 250,
-    render: (rec: any, item: any) => {
-      return (
-        <div className="cursor-pointer hover:font-bold flex flex-col">
-          <Link href={`/customers/${rec}`} target="_blank">
-            {rec}
-          </Link>
-          <div className="truncate max-w-[180px]">{item?.address}</div>
-        </div>
-      );
-    },
-  },
-  {
-    title: "Захиалсан бараа",
-    dataIndex: "product_list",
-    width: 86,
-    filter: true,
-    render: (rec: any, item: any) => {
-      return (
-        <div className="flex flex-col">
-          {item?.order_product?.map((baraa: any, index: number) => {
-            return (
-              <div key={index}>
-                {baraa?.product_name} ({baraa?.too})
-              </div>
-            );
-          })}
-        </div>
-      );
-    },
-  },
-  {
-    title: "Хүргэгч Жолооч",
-    dataIndex: "jolooch_username",
-    width: 86,
-    sorter: true,
-    editable: true,
-    filter: true,
-    render: (rec: any, item: any) => {
-      return (
-        <div className="cursor-pointer hover:font-bold flex gap-5">
-          <Link href={`/users/` + item?.jolooch?._id} target="_blank">
-            {item?.jolooch?.name} ({item?.jolooch?.phone})
-          </Link>
-        </div>
-      );
-    },
-  },
-  {
-    title: "Нийт дүн",
-    dataIndex: "total_price",
-    width: 86,
-    sorter: true,
-    editable: true,
-    render: (val: number) => {
-      return <>{val?.toLocaleString()}</>;
-    },
-  },
-  {
-    title: "Бүртгэгдсэн огноо",
-    dataIndex: "created_at",
-    width: 86,
-    sorter: true,
-    editable: true,
-    render: (value: any) => {
-      return <>{dayjs(value).format("YYYY/MM/DD HH:mm:ss")}</>;
-    },
-  },
-  {
-    title: "Хүлээж авах огноо",
-    dataIndex: "huleejawahudur",
-    width: 86,
-    sorter: true,
-    editable: true,
-    render: (value: any) => {
-      return <>{dayjs(value).format("YYYY/MM/DD")}</>;
-    },
-  },
-  {
-    title: "",
-    dataIndex: "",
-    width: 86,
-    editable: true,
-    render: (rec: any, item: any) => {
-      return <div className="flex gap-2 w-[40px]"></div>;
-    },
-  },
-];

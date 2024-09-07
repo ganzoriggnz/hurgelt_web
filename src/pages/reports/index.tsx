@@ -22,7 +22,7 @@ const BorluulaltPage = () => {
   const nowDate = new Date();
   const current = new Date(nowDate.setHours(0, 0, 0, 0));
   const [startDate, setStartDate] = useState<Date>(
-    new Date(current.setDate(current.getDate()-7))
+    new Date(current.setDate(current.getDate() - 7))
   );
   const [endDate, setEndDate] = useState<Date>(
     new Date(nowDate.setHours(23, 59, 59, 99))
@@ -194,6 +194,22 @@ const BorluulaltPage = () => {
         return (
           <div className="flex gap-2 w-full justify-center">
             {val?.toLocaleString()}
+          </div>
+        );
+      },
+    },
+    {
+      title: "Нийт үлдсэн",
+      dataIndex: "uldsen",
+      key: "uldsen",
+      editable: true,
+      align: "center",
+      render: (val: number, item: any) => {
+        return (
+          <div className="flex gap-2 w-full justify-center font-bold">
+            {(
+              item?.borluultiinUldegdel + item?.aguulahUldegdel
+            )?.toLocaleString()}
           </div>
         );
       },

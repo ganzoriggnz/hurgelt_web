@@ -26,14 +26,6 @@ export default async function handler(
     const searchRgx = rgx(search);
     console.log("balance :::: ", req.body);
 
-    let where = {
-      owner: new mongoose.Types.ObjectId(jolooch),
-      $or: [
-        { product_name: { $regex: searchRgx, $options: "i" } },
-        { product_code: { $regex: searchRgx, $options: "i" } },
-      ],
-    };
-
     await dbConnect();
     const token =
       (req?.cookies?.accessToken as string) ??
@@ -49,18 +41,54 @@ export default async function handler(
         message: "Байхгүй эсвэл идвэхгүй хэрэглэгч байна !!!",
       });
     }
-    const totalcnt = (await UserBalancesModel.countDocuments(where)) ?? 0;
-    const data = await UserBalancesModel.find(where)
-      .populate([
+    if (jolooch && jolooch == "isBugd") {
+      console.log("isbugd====>");
+      const totalcnt = 0;
+      const data = await UserBalancesModel.aggregate([
         {
-          path: "product",
-          model: ProductModel,
+          $group: {
+            _id: "$product",
+            orlogodson: { $sum: "$orlogodson" },
+            zarlagadsan: { $sum: "$zarlagadsan" },
+            hurgegdsen: { $sum: "$hurgegdsen" },
+            uldsen: { $sum: "$uldsen" },
+          },
         },
-      ])
-      .limit(limit ?? 150)
-      .skip(offset)
-      .sort(sort ?? { product_name: 1 });
-    res.status(200).json({ result: true, message: "Success", data, totalcnt });
+        { $sort: { uldsen: 1 } },
+      ]);
+      await ProductModel.populate(data, {
+        path: "_id",
+        select: { _id: 1, price: 1, code: 1, name: 1, delivery_price: 1 },
+      });
+      res.status(200).json({
+        result: true,
+        message: "Success",
+        data,
+        totalcnt: data.length,
+      });
+    } else {
+      let where = {
+        owner: new mongoose.Types.ObjectId(jolooch),
+        $or: [
+          { product_name: { $regex: searchRgx, $options: "i" } },
+          { product_code: { $regex: searchRgx, $options: "i" } },
+        ],
+      };
+      const totalcnt = (await UserBalancesModel.countDocuments(where)) ?? 0;
+      const data = await UserBalancesModel.find(where)
+        .populate([
+          {
+            path: "product",
+            model: ProductModel,
+          },
+        ])
+        .limit(limit ?? 150)
+        .skip(offset)
+        .sort(sort ?? { product_name: 1 });
+      res
+        .status(200)
+        .json({ result: true, message: "Success", data, totalcnt });
+    }
   } catch (e) {
     console.log("getinvoice::ERROR:", e);
     res.status(400).json({ result: false, message: e });

@@ -173,6 +173,7 @@ export interface IOrder {
   duureg?: string;
   address?: string;
   nemelt?: string;
+  joloochDate?: Date;
 
   zone?: string;
   huleejawahudur?: Date;
