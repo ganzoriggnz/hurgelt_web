@@ -61,6 +61,7 @@ export default async function handler(
           delivery_total_price: body?.delivery_total_price,
           too: body?.too,
           jolooch: body?.jolooch_user,
+          joloochDate: body?.joloochDate,
           jolooch_username: body?.jolooch_username,
           zone: body?.zone,
           isPaid: body?.isPaid,
