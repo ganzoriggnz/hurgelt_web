@@ -61,9 +61,13 @@ const AddOrderModal = ({ handleCancel, handleOk, getDataReset, open }: any) => {
   }, [order_products]);
 
   useEffect(() => {
-    if (customer_phone && customer_phone.length == 1) {
+    if (customer_phone && customer_phone.length > 1) {
       console.log(customer_phone);
-      if (customer_phone && customer_phone[0].length > 8) {
+      if (
+        customer_phone &&
+        customer_phone[0].length > 8 &&
+        (customer_phone as [])
+      ) {
         const cust = JSON?.parse(customer_phone[0]);
         todayOrderCheck(cust?.phone);
         setuserId(cust);
@@ -72,7 +76,8 @@ const AddOrderModal = ({ handleCancel, handleOk, getDataReset, open }: any) => {
           address: cust?.address,
         });
       } else {
-        todayOrderCheck(customer_phone[0]);
+        todayOrderCheck(customer_phone);
+        // todayOrderCheck(customer_phone[0]);
       }
     } else {
       setisToday(false);
@@ -83,21 +88,28 @@ const AddOrderModal = ({ handleCancel, handleOk, getDataReset, open }: any) => {
   }, [customer_phone]);
 
   const todayOrderCheck = async (value: string) => {
-    console.log("todayOrderCheck", value?.trim());
-    setphone(value?.trim());
-    axiosInstance
-      .post("/orders/checktodaycustomer", {
-        phone: value?.trim() ?? "",
-      })
-      .then((response: any) => {
-        if (response?.["status"] === 200) {
-          setisToday(response?.data?.result);
-          setuserTodayOrder(response?.data?.data);
-        }
-      })
-      .catch((e: any) => {
-        console.log(e);
-      });
+    if (value?.trim()?.length == 8) {
+      console.log("todayOrderCheck", value?.trim());
+      setphone(value?.trim());
+      axiosInstance
+        .post("/orders/checktodaycustomer", {
+          phone: value?.trim(),
+        })
+        .then((response: any) => {
+          if (response?.["status"] === 200) {
+            setisToday(response?.data?.result);
+            console.log(response?.data?.data);
+            setuserTodayOrder(response?.data?.data);
+            registerform.setFieldsValue({
+              duureg: response?.data?.data?.duureg,
+              address: response?.data?.data?.address,
+            });
+          }
+        })
+        .catch((e: any) => {
+          console.log(e);
+        });
+    }
   };
 
   const submitHanlde = async (values: any) => {
@@ -117,7 +129,7 @@ const AddOrderModal = ({ handleCancel, handleOk, getDataReset, open }: any) => {
               customer_phone.length == 1 &&
               customer_phone[0].length > 10
                 ? userId?.phone
-                : customer_phone[0]?.trim(),
+                : customer_phone?.trim(),
             duureg: values?.duureg,
             address: values?.address,
             nemelt: values?.nemelt,
@@ -194,7 +206,7 @@ const AddOrderModal = ({ handleCancel, handleOk, getDataReset, open }: any) => {
 
   const dateCheck = () => {
     const nowDate = new Date();
-    return new Date(nowDate.setHours(15, 30, 0, 1)) > new Date()
+    return new Date(nowDate.setHours(13, 0, 0, 1)) > new Date()
       ? new Date()
       : new Date(nowDate.setDate(nowDate.getDate() + 1));
   };
@@ -280,6 +292,13 @@ const AddOrderModal = ({ handleCancel, handleOk, getDataReset, open }: any) => {
                 />
               </Form.Item>
 
+              {/* <SelectCustomerWidget
+                name={"customer_phone"}
+                label="Утас"
+                className="mb-1"
+                wrapperCol={{ span: 24 }}
+                rules={[{ required: true, message: "" }]}
+              /> */}
               {isToday ? (
                 <Link
                   className="text-red-600 w-full flex justify-end mb-1 flex-col items-end"

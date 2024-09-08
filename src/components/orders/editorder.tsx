@@ -43,14 +43,6 @@ const EditOrderModal = ({
   const duureg = Form.useWatch("duureg", registerform);
   const dateFormat = "YYYY/MM/DD";
 
-  const [joloochList, setZoneJolooch] = useState<any[]>([]);
-
-  useEffect(() => {
-    const templist = sessionStorage.getItem("deliveryzoneJoloochList");
-    if (templist) {
-      setZoneJolooch(JSON.parse(templist));
-    }
-  }, []);
   const jolooch = Form.useWatch("jolooch", registerform);
 
   useEffect(() => {
@@ -71,7 +63,17 @@ const EditOrderModal = ({
       });
     }
   }, [jolooch, data]);
+
   const [joloochDate, setJoloochDate] = useState<Date | undefined>();
+
+  const [joloochList, setZoneJolooch] = useState<any[]>([]);
+
+  useEffect(() => {
+    const templist = sessionStorage.getItem("deliveryzoneJoloochList");
+    if (templist) {
+      setZoneJolooch(JSON.parse(templist));
+    }
+  }, []);
 
   useEffect(() => {
     if (order_products?.length > 0) {
@@ -109,11 +111,11 @@ const EditOrderModal = ({
             duureg: values?.duureg,
             name: values?.name,
             address: values?.address,
+            joloochDate: joloochDate,
             other: values?.other,
             payment_type: values?.payment_type,
             isPaid: values?.is_paid,
             nemelt: values?.nemelt,
-            joloochDate: joloochDate,
             order_product: order_products?.map((items: any) => {
               const prod = items?.product ? JSON.parse(items?.product) : {};
               return {
@@ -148,6 +150,7 @@ const EditOrderModal = ({
         .then((response: any) => {
           if (response?.["status"] === 200) {
             registerform.resetFields();
+            setJoloochDate(undefined);
             handleOk();
           } else {
             toast.warning(response?.data?.message);
@@ -174,6 +177,7 @@ const EditOrderModal = ({
         .then((response: any) => {
           if (response?.["status"] === 200) {
             registerform.resetFields();
+            setJoloochDate(undefined);
             handleOk();
           } else {
             toast.warning(response?.data?.message);
@@ -200,6 +204,7 @@ const EditOrderModal = ({
         .then((response: any) => {
           if (response?.["status"] === 200) {
             registerform.resetFields();
+            setJoloochDate(undefined);
             handleOk();
           } else {
             toast.warning(response?.data?.message);
@@ -230,6 +235,9 @@ const EditOrderModal = ({
         hurgelt_tsag: data?.huleejawahtsag,
         nemelt: data?.nemelt,
         is_paid: data?.isPaid,
+        joloochDate: data?.joloochDate
+          ? dayjs(data?.joloochDate).format("YYYY/MM/DD HH:mm:ss")
+          : null,
         payment_type: data?.payment_type,
         status: data?.status,
         jolooch: joloochList.findLast((a) =>
@@ -263,6 +271,7 @@ const EditOrderModal = ({
         registerform.resetFields();
         setloading(false);
         handleCancel();
+        setJoloochDate(undefined);
       }}
       centered
       open={open}
@@ -525,6 +534,7 @@ const EditOrderModal = ({
                 className=" px-1 w-[150px] max-w-[150px]"
                 onClick={() => {
                   registerform.resetFields();
+                  setJoloochDate(undefined);
                   handleCancel();
                 }}
               >
