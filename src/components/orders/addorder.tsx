@@ -206,7 +206,7 @@ const AddOrderModal = ({ handleCancel, handleOk, getDataReset, open }: any) => {
 
   const dateCheck = () => {
     const nowDate = new Date();
-    return new Date(nowDate.setHours(13, 0, 0, 1)) > new Date()
+    return new Date(nowDate.setHours(15, 30, 0, 1)) > new Date()
       ? new Date()
       : new Date(nowDate.setDate(nowDate.getDate() + 1));
   };
