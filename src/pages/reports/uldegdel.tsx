@@ -90,7 +90,18 @@ const UldegdelPage = () => {
               : "",
         });
         if (result?.status == 200) {
-          settableData(result?.data?.data);
+          let temp = [];
+          for (let index = 0; index < result?.data?.data.length; index++) {
+            const element = result?.data?.data[index];
+            temp.push({
+              ...element,
+              uldsen:
+                element?.orlogodson -
+                element?.zarlagadsan -
+                element?.hurgegdsen,
+            });
+          }
+          settableData(temp);
           const tempdd = [];
           if (result?.data?.data && result?.data?.data?.length > 0) {
             for (let index = 0; index < result?.data?.data.length; index++) {
@@ -126,7 +137,18 @@ const UldegdelPage = () => {
           prodId: prodId != null ? JSON?.parse(prodId)?._id : "",
         });
         if (result?.status == 200) {
-          settableData2(result?.data?.data);
+          let temp = [];
+          for (let index = 0; index < result?.data?.data.length; index++) {
+            const element = result?.data?.data[index];
+            temp.push({
+              ...element,
+              uldsen:
+                element?.orlogodson -
+                element?.zarlagadsan -
+                element?.hurgegdsen,
+            });
+          }
+          settableData2(temp);
           settotalcnt2(result?.data?.totalcnt);
         }
       } catch (e: any) {
@@ -153,24 +175,43 @@ const UldegdelPage = () => {
         sortTemp?.order
       ) {
         const fieldname = sortTemp.field ?? "";
+        let tempSort = [];
         switch (fieldname) {
-          case "product_code":
-            sort2 = { product_code: sortTemp.order == "descend" ? -1 : 1 };
-            break;
           case "uldsen":
             sort2 = { uldsen: sortTemp.order == "descend" ? -1 : 1 };
+            tempSort = tableData.sort((a: any, b: any) =>
+              sortTemp.order == "descend"
+                ? a.uldsen - b.uldsen
+                : b.uldsen - a.uldsen
+            );
+            settableData(tempSort);
             break;
           case "hurgegdsen":
             sort2 = { hurgegdsen: sortTemp.order == "descend" ? -1 : 1 };
+            tempSort = tableData.sort((a: any, b: any) =>
+              sortTemp.order == "descend"
+                ? a.hurgegdsen - b.hurgegdsen
+                : b.hurgegdsen - a.hurgegdsen
+            );
+            settableData(tempSort);
             break;
           case "zarlagadsan":
             sort2 = { zarlagadsan: sortTemp.order == "descend" ? -1 : 1 };
+            tempSort = tableData.sort((a: any, b: any) =>
+              sortTemp.order == "descend"
+                ? a.zarlagadsan - b.zarlagadsan
+                : b.zarlagadsan - a.zarlagadsan
+            );
+            settableData(tempSort);
             break;
           case "orlogodson":
             sort2 = { orlogodson: sortTemp.order == "descend" ? -1 : 1 };
-            break;
-          case "created_at":
-            sort2 = { created_at: sortTemp.order == "descend" ? -1 : 1 };
+            tempSort = tableData.sort((a: any, b: any) =>
+              sortTemp.order == "descend"
+                ? a.orlogodson - b.orlogodson
+                : b.orlogodson - a.orlogodson
+            );
+            settableData(tempSort);
             break;
           default:
             sort2 = { product_name: sortTemp.order == "descend" ? -1 : 1 };
@@ -178,11 +219,10 @@ const UldegdelPage = () => {
         }
       }
     }
-
-    setsort(sort2);
-    getData({
-      sort: sort2,
-    });
+    // setsort(sort2);
+    // getData({
+    //   sort: sort2,
+    // });
   };
   const onChange2: TableProps<IUserBalances>["onChange"] = (
     pagination,
@@ -200,24 +240,43 @@ const UldegdelPage = () => {
         sortTemp?.order
       ) {
         const fieldname = sortTemp.field ?? "";
+        let tempSort = [];
         switch (fieldname) {
-          case "product_code":
-            sort2 = { product_code: sortTemp.order == "descend" ? -1 : 1 };
-            break;
           case "uldsen":
             sort2 = { uldsen: sortTemp.order == "descend" ? -1 : 1 };
+            tempSort = tableData2.sort((a: any, b: any) =>
+              sortTemp.order == "descend"
+                ? a.uldsen - b.uldsen
+                : b.uldsen - a.uldsen
+            );
+            settableData2(tempSort);
             break;
           case "hurgegdsen":
             sort2 = { hurgegdsen: sortTemp.order == "descend" ? -1 : 1 };
+            tempSort = tableData2.sort((a: any, b: any) =>
+              sortTemp.order == "descend"
+                ? a.hurgegdsen - b.hurgegdsen
+                : b.hurgegdsen - a.hurgegdsen
+            );
+            settableData2(tempSort);
             break;
           case "zarlagadsan":
             sort2 = { zarlagadsan: sortTemp.order == "descend" ? -1 : 1 };
+            tempSort = tableData2.sort((a: any, b: any) =>
+              sortTemp.order == "descend"
+                ? a.zarlagadsan - b.zarlagadsan
+                : b.zarlagadsan - a.zarlagadsan
+            );
+            settableData2(tempSort);
             break;
           case "orlogodson":
             sort2 = { orlogodson: sortTemp.order == "descend" ? -1 : 1 };
-            break;
-          case "created_at":
-            sort2 = { created_at: sortTemp.order == "descend" ? -1 : 1 };
+            tempSort = tableData2.sort((a: any, b: any) =>
+              sortTemp.order == "descend"
+                ? a.orlogodson - b.orlogodson
+                : b.orlogodson - a.orlogodson
+            );
+            settableData2(tempSort);
             break;
           default:
             sort2 = { product_name: sortTemp.order == "descend" ? -1 : 1 };
@@ -225,11 +284,6 @@ const UldegdelPage = () => {
         }
       }
     }
-
-    setsort(sort2);
-    getData2({
-      sort: sort2,
-    });
   };
 
   useEffect(() => {
@@ -551,19 +605,7 @@ const UldegdelPage = () => {
                     dataSource={tableData}
                     size="small"
                     columns={columns}
-                    rowClassName={(record: any, index) =>
-                      record?.orlogodson -
-                        record?.zarlagadsan -
-                        record?.hurgegdsen <
-                      1
-                        ? "editable-row  bg-[#FFD4D4]"
-                        : record?.orlogodson -
-                            record?.zarlagadsan -
-                            record?.hurgegdsen <=
-                          50
-                        ? "editable-row bg-[#FFE79D7E]"
-                        : "editable-row  "
-                    }
+                    rowClassName="editable-row"
                     pagination={false}
                   />
                 </div>
