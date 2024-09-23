@@ -354,7 +354,13 @@ const AddOrderModal = ({ handleCancel, handleOk, getDataReset, open }: any) => {
                               {...restField}
                               name={[name, "too"]}
                               className="m-0"
-                              // rules={[{ required: true, message: "" }]}
+                              rules={[
+                                {
+                                  pattern: /^[\d]{0,9}$/,
+                                  message: "Зөвхөн бүхэл тоо оруулна уу!",
+                                },
+                                { required: true, message: "Тоо оруулна уу" },
+                              ]}
                             >
                               <Input
                                 type="number"
