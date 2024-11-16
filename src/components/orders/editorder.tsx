@@ -1,14 +1,5 @@
 import { useData } from "@/helper/context";
-import {
-  Button,
-  DatePicker,
-  Form,
-  Input,
-  Modal,
-  Select,
-  Spin,
-  Switch,
-} from "antd";
+import { Button, DatePicker, Form, Input, Modal, Select, Spin } from "antd";
 import { useEffect, useState } from "react";
 import SelectProductWidget from "../select_product";
 
@@ -383,29 +374,7 @@ const EditOrderModal = ({
                   rows={3}
                 />
               </Form.Item>
-              <Form.Item
-                className="mb-3"
-                label="Дүүрэг"
-                name={"duureg"}
-                // rules={[{ required: true, message: "" }]}
-              >
-                <Select
-                  style={{ maxWidth: 280 }}
-                  placeholder="Дүүрэг сонгох"
-                  options={[
-                    { label: "Баянзүрх", value: "Баянзүрх" },
-                    { label: "Сүхбаатар", value: "Сүхбаатар" },
-                    { label: "Чингэлтэй", value: "Чингэлтэй" },
-                    { label: "Хан-Уул", value: "Хан-Уул" },
-                    { label: "Сонгинохайрхан", value: "Сонгинохайрхан" },
-                    { label: "Баянгол", value: "Баянгол" },
-                    { label: "Налайх", value: "Налайх" },
-                    { label: "Багахангай", value: "Багахангай" },
-                    { label: "Багануур", value: "Багануур" },
-                    { label: "Орон нутаг", value: "Орон нутаг" },
-                  ]}
-                />
-              </Form.Item>
+
               <SelectJoloochWidget
                 duureg={duureg}
                 className="mb-1"
@@ -422,13 +391,6 @@ const EditOrderModal = ({
                 label="Хүргэлт хийх өдөр"
               >
                 <DatePicker format={dateFormat} />
-              </Form.Item>
-              <Form.Item
-                className="mb-3"
-                name={"hurgelt_tsag"}
-                label="Хүргэлт хийх цаг"
-              >
-                <Input className="w-[150px]" />
               </Form.Item>
 
               {data?.from_user ? (
@@ -448,26 +410,6 @@ const EditOrderModal = ({
                 label="Хүргэлтийн нэмэлт"
               >
                 <Input.TextArea rows={3} placeholder="" />
-              </Form.Item>
-              <Form.Item
-                name={"payment_type"}
-                className="mb-2"
-                label="Төлбөрийн хэлбэр"
-              >
-                <Select
-                  options={[
-                    { label: "", value: "" },
-                    { label: "Дансаар", value: "Дансаар" },
-                    { label: "Бэлэн", value: "Бэлэн" },
-                  ]}
-                />
-              </Form.Item>
-              <Form.Item
-                name={"is_paid"}
-                label="Төлбөр хийгдсэн"
-                className=" m-0"
-              >
-                <Switch className="bg-gray-300" />
               </Form.Item>
               <Form.Item name={"status"} label="Төлөв" className="m-0">
                 <Select
