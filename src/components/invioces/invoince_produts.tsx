@@ -1,8 +1,10 @@
 import { IInvoice } from "@/types/next";
-import { Modal } from "antd";
+import { Button, Modal } from "antd";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
+import AddInvoiceZarlagaCopyModal from "./addInvoinceZarlaga";
 
 const InvoiceProdutsModal = ({
   handleCancel,
@@ -15,6 +17,8 @@ const InvoiceProdutsModal = ({
   open: boolean;
   data: IInvoice;
 }) => {
+  
+  const [openMo, setOpenMo] = useState(false);
   return (
     <Modal
       width={790}
@@ -115,6 +119,30 @@ const InvoiceProdutsModal = ({
           Хэнд: <span className="font-semibold">{data?.to_username}</span>
         </p>
       </div>
+      {
+        data?.type=='Хөдөлгөөн' && <Button onClick={()=>{
+          
+          setOpenMo(true);
+        }}>Хуулбар зарлага үүсгэх</Button>
+      }
+      <AddInvoiceZarlagaCopyModal open={openMo} data={{
+        joloochId : JSON.stringify({
+          "_id": data?.from_user?._id,
+          "username": data?.from_user?.username,
+          "name": data?.from_user?.name,
+          "email": data?.from_user?.email,
+          "phone": data?.from_user?.phone,
+          "role": data?.from_user?.role,
+        }),
+        prod : data?.invoice_product
+      }} handleOk={()=>{
+        setOpenMo(false);
+        handleOk();
+        handleCancel();
+      }} handleCancel={()=>{
+         setOpenMo(false);
+         handleCancel();
+      }} />
     </Modal>
   );
 };

@@ -1,3 +1,4 @@
+import AddInvoiceHudulguunTootsooModal from "@/components/invioces/addInvoinceHudulguun";
 import SelectProductWidget from "@/components/select_product";
 import SelectPadaanUserWidget from "@/components/select_userpadaan";
 import EditUldeglModal from "@/components/uldegdel/editUldegdel";
@@ -33,6 +34,8 @@ const UldegdelPage = () => {
   const [totalcnt, settotalcnt] = useState(0);
   const [totalcnt2, settotalcnt2] = useState(0);
   const [undsenform] = Form.useForm();
+  
+  const [openHudulguun, setOpenHudulguun] = useState(false);
   const [baraform] = Form.useForm();
 
   const joloochId = Form.useWatch("jolooch", undsenform);
@@ -490,6 +493,16 @@ const UldegdelPage = () => {
   ];
   return (
     <div className="w-full ">
+        <AddInvoiceHudulguunTootsooModal open={openHudulguun} data={
+        {joloochId : joloochId, 
+          prod : tootsooUldegdel
+        }
+      } handleCancel={()=>{
+        setOpenHudulguun(false);
+      }} handleOk={()=>{
+        setOpenHudulguun(false);
+        getData();
+      }}/>
       <Tabs
         defaultActiveKey="1"
         type="card"
@@ -556,6 +569,14 @@ const UldegdelPage = () => {
                           );
                         })}
                       </div>
+                      {tootsooUldegdel?.length > 0 && (
+                        <Button className="bg-slate-500 text-white mt-3" onClick={()=>{
+                          handleCancel();
+                          setOpenHudulguun(true);
+                        }}>
+                          Хөдөлгөөнөөр татах
+                        </Button>
+                      )}
                     </Modal>
                   </div>
                 </div>
