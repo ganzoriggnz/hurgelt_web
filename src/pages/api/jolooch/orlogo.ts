@@ -66,7 +66,7 @@ export default async function handler(
           model: CustomerModel,
         },
       ])
-      .limit(limit ?? 10)
+      // .limit(limit ?? 10)
       .skip(offset)
       .sort(sort ?? { completedDate: -1 });
     res.status(200).json({ result: true, message: "Success", data, totalcnt });
